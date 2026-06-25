@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: shail-sharma-portfolio
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: GITHUB_USERNAME
+        value: Shailsharma2604
+      - key: GITHUB_TOKEN
+        sync: false

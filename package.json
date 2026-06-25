@@ -1,0 +1,20 @@
+{
+  "name": "shail-sharma-portfolio",
+  "version": "1.0.0",
+  "description": "Personal portfolio — Shail Sharma",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "vercel:dev": "vercel dev"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": ["portfolio", "express"],
+  "author": "Shail Sharma",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}

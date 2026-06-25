@@ -1,0 +1,89 @@
+{
+  "profileUrl": "https://curin.chitkara.edu.in/patents/",
+  "grantedUrl": "https://curin.chitkara.edu.in/patents-granted/",
+  "linkedinProfileUrl": "https://in.linkedin.com/in/shail-sharma-607175250",
+  "university": "Chitkara University",
+  "items": [
+    {
+      "title": "Protective Headgear for Visually Impaired Individuals",
+      "applicationNumber": "425479-001",
+      "filedDate": "2024-07-31",
+      "grantedDate": "2024-09-20",
+      "status": "Granted",
+      "category": "Assistive Tech",
+      "coInventors": ["Reetu Malhotra", "Vrinda Virmani", "Pratham Gupta", "Gurdyal Singh"],
+      "patentUrl": "https://curin.chitkara.edu.in/patents/protective-headgear-for-visually-impaired-individuals/",
+      "featured": true
+    },
+    {
+      "title": "Integrated Touch Screen Phonecase",
+      "applicationNumber": "404662-001",
+      "filedDate": "2024-01-17",
+      "grantedDate": "2024-08-30",
+      "status": "Granted",
+      "category": "Consumer Tech",
+      "coInventors": ["Reetu Malhotra", "Sonali", "Gurdyal Singh"],
+      "patentUrl": "https://curin.chitkara.edu.in/patents/integrated-touch-screen-phonecase",
+      "featured": true
+    },
+    {
+      "title": "Multifunctional Cooling Pad",
+      "applicationNumber": "404661-001",
+      "filedDate": "2024-01-17",
+      "grantedDate": "2025-03-24",
+      "status": "Granted",
+      "category": "Wearables · Health",
+      "coInventors": ["Reetu Malhotra", "Pratham Gupta", "Gurdyal Singh"],
+      "patentUrl": "https://curin.chitkara.edu.in/patents/multifunctional-cooling-pad/",
+      "featured": true
+    },
+    {
+      "title": "AI-Driven Dynamic Mobility and Rehabilitation System",
+      "applicationNumber": "202511032393",
+      "filedDate": "2025-04-01",
+      "status": "Filed",
+      "category": "AI · Healthcare",
+      "coInventors": ["Reetu Malhotra", "Pratham Gupta"]
+    },
+    {
+      "title": "Wearable Safety Device",
+      "applicationNumber": "202511032395",
+      "filedDate": "2025-04-01",
+      "status": "Filed",
+      "category": "IoT · Safety",
+      "coInventors": ["Reetu Malhotra", "Pratham Gupta"]
+    },
+    {
+      "title": "Sustainable Air Filtration Window",
+      "applicationNumber": "202511032397",
+      "filedDate": "2025-04-01",
+      "status": "Filed",
+      "category": "Sustainability",
+      "coInventors": ["Reetu Malhotra", "Pratham Gupta"]
+    },
+    {
+      "title": "Eco Touch Navigator Glove",
+      "applicationNumber": "202411058219",
+      "filedDate": "2024-07-31",
+      "status": "Filed",
+      "category": "Assistive Tech",
+      "coInventors": ["Reetu Malhotra", "Vrinda Virmani", "Pratham Gupta", "Gurdyal Singh"]
+    },
+    {
+      "title": "Automated Medicine Tracker",
+      "applicationNumber": "425478-001",
+      "filedDate": "2024-07-31",
+      "status": "Filed",
+      "category": "Healthcare · IoT",
+      "coInventors": ["Reetu Malhotra", "Vrinda Virmani", "Pratham Gupta", "Gurdyal Singh"]
+    },
+    {
+      "title": "Temp-Comfort Shoe",
+      "applicationNumber": "202411058221",
+      "filedDate": "2024-07-31",
+      "status": "Filed",
+      "category": "Wearables",
+      "coInventors": ["Reetu Malhotra", "Vrinda Virmani", "Pratham Gupta", "Gurdyal Singh"]
+    }
+  ]
+}
