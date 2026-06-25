@@ -16,14 +16,20 @@
     })();
   </script>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#09090f">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="description" content="Shail Sharma — Final-year B.E. CSE (AI), Associate Data Engineer at R Systems. Databricks Certified.">
   <meta name="author" content="Shail Sharma">
   <title>Shail Sharma | Data Engineer &amp; AI Developer</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css"></noscript>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -48,7 +54,7 @@
       <span class="logo-dot"></span>
       Shail<span class="logo-accent">.</span>
     </a>
-    <button class="nav-toggle" id="navToggle" aria-label="Menu">
+    <button class="nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false" aria-controls="navLinks">
       <span></span><span></span><span></span>
     </button>
     <ul class="nav-links" id="navLinks">
@@ -73,6 +79,17 @@
       <li><a href="#contact" class="nav-cta">Contact</a></li>
     </ul>
   </nav>
+
+  <div class="now-strip" id="nowStrip" aria-label="Current status">
+    <div class="container now-strip-inner">
+      <span class="now-dot" aria-hidden="true"></span>
+      <span class="now-focus" id="nowFocus">Associate Data Engineer @ R Systems</span>
+      <span class="now-sep" aria-hidden="true">·</span>
+      <span class="now-open">Open to roles</span>
+      <span class="now-sep" aria-hidden="true">·</span>
+      <time class="now-time" id="nowTime" datetime=""></time>
+    </div>
+  </div>
 
   <div class="live-ribbon" id="liveRibbon" aria-live="polite">
     <div class="container live-ribbon-inner">
@@ -960,10 +977,10 @@
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
   </button>
 
-  <script src="js/main.js"></script>
-  <script src="js/live.js"></script>
-  <script src="js/interactive.js"></script>
-  <script src="js/extras.js"></script>
-  <script src="js/nextlevel.js"></script>
+  <script src="js/main.js" defer></script>
+  <script src="js/live.js" defer></script>
+  <script src="js/interactive.js" defer></script>
+  <script src="js/extras.js" defer></script>
+  <script src="js/nextlevel.js" defer></script>
 </body>
 </html>

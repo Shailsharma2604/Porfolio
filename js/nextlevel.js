@@ -44,16 +44,21 @@
     const mesh = $('.bg-mesh');
     const heroVisual = $('.hero-visual');
     const heroText = $('.hero-text');
+    let parallaxTicking = false;
 
     window.addEventListener(
       'scroll',
       () => {
-        const y = window.scrollY;
-        const factor = Math.min(y / 800, 1);
-        if (orbs) orbs.style.transform = `translateY(${y * 0.12}px)`;
-        if (mesh) mesh.style.transform = `translateY(${y * 0.06}px)`;
-        if (heroVisual) heroVisual.style.transform = `translateY(${y * 0.08}px)`;
-        if (heroText) heroText.style.transform = `translateY(${y * 0.04}px)`;
+        if (parallaxTicking) return;
+        parallaxTicking = true;
+        requestAnimationFrame(() => {
+          const y = window.scrollY;
+          if (orbs) orbs.style.transform = `translate3d(0, ${y * 0.12}px, 0)`;
+          if (mesh) mesh.style.transform = `translate3d(0, ${y * 0.06}px, 0)`;
+          if (heroVisual) heroVisual.style.transform = `translate3d(0, ${y * 0.08}px, 0)`;
+          if (heroText) heroText.style.transform = `translate3d(0, ${y * 0.04}px, 0)`;
+          parallaxTicking = false;
+        });
       },
       { passive: true }
     );
@@ -579,18 +584,25 @@
     });
   }
 
-  /* ═══ Boot ═══ */
-  initCodeSnippets();
-  initParallax();
-  initHeroTilt();
-  initHeroDecode();
+  /* ═══ Boot (critical first, heavy deferred) ═══ */
+  function scheduleIdle(fn, timeout = 2000) {
+    if ('requestIdleCallback' in window) requestIdleCallback(fn, { timeout });
+    else setTimeout(fn, 1);
+  }
+
   initSectionDividers();
   initTimelineProgress();
-  initSkillRadar();
   initProjectCarousel();
   initDevShell();
   initPerfWidget();
   initContactForm();
-  initProjectFlip();
   hookProjectFilters();
+
+  scheduleIdle(() => {
+    initCodeSnippets();
+    initParallax();
+    initHeroDecode();
+    initSkillRadar();
+    initProjectFlip();
+  }, 1800);
 })();

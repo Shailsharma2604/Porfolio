@@ -2,6 +2,11 @@
   const $ = (sel, ctx = document) => ctx.querySelector(sel);
   const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
 
+  function scheduleIdle(fn, timeout = 2000) {
+    if ('requestIdleCallback' in window) requestIdleCallback(fn, { timeout });
+    else setTimeout(fn, 1);
+  }
+
   const STATIC_CONFIG = {
     phone: '+918288851361',
     phoneDisplay: '+91 82888 51361',
@@ -28,6 +33,7 @@
   };
 
   const REFRESH_SEC = 300;
+  const CACHE_TTL = REFRESH_SEC * 1000;
   let countdown = REFRESH_SEC;
   let countdownTimer = null;
   let patentFilter = 'all';
@@ -65,6 +71,68 @@
     commitTickerWrap: $('#commitTickerWrap'),
     githubPulse: $('#githubPulse'),
   };
+
+  function getCached(key) {
+    try {
+      const raw = sessionStorage.getItem(`portfolio-${key}`);
+      if (!raw) return null;
+      const { data, ts } = JSON.parse(raw);
+      if (Date.now() - ts > CACHE_TTL) return null;
+      return data;
+    } catch {
+      return null;
+    }
+  }
+
+  function setCache(key, data) {
+    try {
+      sessionStorage.setItem(`portfolio-${key}`, JSON.stringify({ data, ts: Date.now() }));
+    } catch {}
+  }
+
+  function escapeAttr(str) {
+    return String(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+  }
+
+  function initMarqueePause() {
+    const observe = (el, rootSel) => {
+      if (!el) return;
+      const root = el.closest(rootSel) || el;
+      new IntersectionObserver(
+        ([entry]) => {
+          el.style.animationPlayState = entry.isIntersecting ? 'running' : 'paused';
+        },
+        { threshold: 0 }
+      ).observe(root);
+    };
+    observe(els.commitTicker, '.commit-ticker-wrap');
+    observe(els.ribbonTrack, '.live-ribbon');
+  }
+
+  function renderFromCache() {
+    const patents = getCached('patents');
+    const config = getCached('config');
+    const gh = getCached('github');
+    if (!patents && !config && !gh) return false;
+
+    if (patents) renderPatents(patents);
+    if (config) {
+      renderHolopin(config);
+      renderLinkedIn(config);
+      renderProfileLinks(config, patents || getCached('patents'));
+    }
+    if (gh) {
+      renderGitHub(gh);
+      renderGitHubNotice('');
+    }
+    if (gh) {
+      renderImpactStats(gh, patents);
+      renderLiveRibbon(gh, patents);
+      renderLiveStatus(gh, patents);
+    }
+    if (els.lastUpdated) els.lastUpdated.textContent = 'Showing cached data…';
+    return true;
+  }
 
   function timeAgo(iso) {
     const s = Math.floor((Date.now() - new Date(iso)) / 1000);
@@ -392,6 +460,13 @@
       text = `Last GitHub: ${eventLabel(gh.latestEvent)} · ${timeAgo(gh.latestEvent.created_at)}`;
     }
     els.liveStatus.textContent = text;
+
+    const nowFocus = $('#nowFocus');
+    if (nowFocus) {
+      nowFocus.textContent = gh?.latestEvent
+        ? `Last active: ${eventLabel(gh.latestEvent)}`
+        : 'Associate Data Engineer @ R Systems';
+    }
   }
 
   function buildWeeklyActivity(events) {
@@ -504,11 +579,11 @@
     }
     els.commits.innerHTML = commits
       .map(
-        (c, i) => `
-      <a href="${c.url || `https://github.com/${login}/${c.repo}`}" target="_blank" rel="noopener" class="commit-item pop-in" style="--d:${0.04 * i}s">
+        (c) => `
+      <a href="${c.url || `https://github.com/${login}/${c.repo}`}" target="_blank" rel="noopener" class="commit-item">
         <code class="commit-sha">${c.sha}</code>
-        <span class="commit-msg">${c.message}</span>
-        <span class="commit-meta">${c.repo} · ${timeAgo(c.created_at)}</span>
+        <span class="commit-msg" title="${escapeAttr(c.message)}">${c.message}</span>
+        <span class="commit-meta"><span class="commit-repo">${c.repo}</span><span class="commit-time">${timeAgo(c.created_at)}</span></span>
       </a>`
       )
       .join('');
@@ -656,6 +731,7 @@
     renderCommitTicker(data.recentCommits);
     renderGitHubPulse(data.pulse, u.login, data.fallback, data.events);
     window.portfolioUpdatePerf?.(u.public_repos, u.followers);
+    window.portfolioRefreshGlowCards?.();
 
     if (els.activity) {
       const profileUrl = `https://github.com/${u.login}`;
@@ -805,9 +881,12 @@
     return '';
   }
 
-  async function loadAll() {
-    showGitHubSkeletons();
-    if (els.patentsGrid) els.patentsGrid.innerHTML = skeleton('<div class="patent-skeleton"></div>', 3);
+  async function loadAll(force = false) {
+    const hadCache = !force && renderFromCache();
+    if (!hadCache) {
+      showGitHubSkeletons();
+      if (els.patentsGrid) els.patentsGrid.innerHTML = skeleton('<div class="patent-skeleton"></div>', 3);
+    }
 
     const isOffline = window.location.protocol === 'file:';
     const [githubResult, config, patents] = await Promise.all([
@@ -819,8 +898,12 @@
     const hasPatents = (patents?.items?.length || 0) > 0;
     const hasConfig = config && Object.keys(config).length > 0;
 
-    if (hasPatents) renderPatents(patents);
+    if (hasPatents) {
+      setCache('patents', patents);
+      renderPatents(patents);
+    }
     if (hasConfig) {
+      setCache('config', config);
       renderHolopin(config);
       renderLinkedIn(config);
       renderProfileLinks(config, patents);
@@ -829,6 +912,7 @@
     let gh = null;
     if (githubResult.ok) {
       gh = githubResult.data;
+      setCache('github', gh);
       renderGitHub(gh);
       renderGitHubNotice(getGitHubNoticeMessage(githubResult));
     } else if (hasPatents || hasConfig || isOffline) {
@@ -849,10 +933,15 @@
     showError();
   }
 
-  initTabs();
-  initPatentFilters();
-  updateClock();
-  setInterval(updateClock, 1000);
-  els.refreshBtn?.addEventListener('click', loadAll);
-  loadAll();
+  function bootLive() {
+    initTabs();
+    initPatentFilters();
+    initMarqueePause();
+    updateClock();
+    setInterval(updateClock, 1000);
+    els.refreshBtn?.addEventListener('click', () => loadAll(true));
+    loadAll();
+  }
+
+  scheduleIdle(bootLive, 1200);
 })();

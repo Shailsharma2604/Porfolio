@@ -4,29 +4,43 @@
 
   const toast = (msg, type) => window.portfolioToast?.(msg, type);
 
-  /* ─── Cursor spotlight ─── */
+  /* ─── Cursor spotlight (deferred, desktop only) ─── */
   const spotlight = $('#cursorSpotlight');
-  if (spotlight && window.matchMedia('(hover: hover)').matches) {
-    let sx = 0;
-    let sy = 0;
-    let tx = 0;
-    let ty = 0;
-    document.addEventListener(
-      'mousemove',
-      (e) => {
-        tx = e.clientX;
-        ty = e.clientY;
-      },
-      { passive: true }
-    );
-    function tickSpotlight() {
-      sx += (tx - sx) * 0.08;
-      sy += (ty - sy) * 0.08;
-      spotlight.style.setProperty('--spot-x', `${sx}px`);
-      spotlight.style.setProperty('--spot-y', `${sy}px`);
-      requestAnimationFrame(tickSpotlight);
-    }
-    tickSpotlight();
+  if (spotlight && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    const startSpotlight = () => {
+      let sx = 0;
+      let sy = 0;
+      let tx = 0;
+      let ty = 0;
+      let spotRunning = false;
+      document.addEventListener(
+        'mousemove',
+        (e) => {
+          tx = e.clientX;
+          ty = e.clientY;
+          if (!spotRunning) {
+            spotRunning = true;
+            tickSpotlight();
+          }
+        },
+        { passive: true }
+      );
+      function tickSpotlight() {
+        const dx = tx - sx;
+        const dy = ty - sy;
+        if (Math.abs(dx) < 0.5 && Math.abs(dy) < 0.5) {
+          spotRunning = false;
+          return;
+        }
+        sx += dx * 0.08;
+        sy += dy * 0.08;
+        spotlight.style.setProperty('--spot-x', `${sx}px`);
+        spotlight.style.setProperty('--spot-y', `${sy}px`);
+        requestAnimationFrame(tickSpotlight);
+      }
+    };
+    if ('requestIdleCallback' in window) requestIdleCallback(startSpotlight, { timeout: 2500 });
+    else setTimeout(startSpotlight, 500);
   }
 
   /* ─── Name scramble ─── */
