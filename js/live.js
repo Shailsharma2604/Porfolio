@@ -578,6 +578,7 @@
       return;
     }
     els.commits.innerHTML = commits
+      .slice(0, 8)
       .map(
         (c) => `
       <a href="${c.url || `https://github.com/${login}/${c.repo}`}" target="_blank" rel="noopener" class="commit-item">
@@ -592,7 +593,6 @@
       </a>`
       )
       .join('');
-    animateDynamicContent(els.commits);
   }
 
   function getApiBase() {

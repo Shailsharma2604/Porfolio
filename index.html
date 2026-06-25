@@ -30,7 +30,7 @@
   <noscript><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css" media="print" onload="this.media='all'">
   <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css"></noscript>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=2">
 </head>
 <body>
   <div class="cursor-spotlight" id="cursorSpotlight" aria-hidden="true"></div>
@@ -978,9 +978,17 @@
   </button>
 
   <script src="js/main.js" defer></script>
-  <script src="js/live.js" defer></script>
+  <script src="js/live.js?v=2" defer></script>
   <script src="js/interactive.js" defer></script>
   <script src="js/extras.js" defer></script>
   <script src="js/nextlevel.js" defer></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "@vercel/speed-insights": "https://esm.sh/@vercel/speed-insights@2.0.0"
+      }
+    }
+  </script>
+  <script type="module" src="js/speed-insights.js?v=2"></script>
 </body>
 </html>

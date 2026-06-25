@@ -11,10 +11,14 @@
   "engines": {
     "node": ">=18"
   },
-  "keywords": ["portfolio", "express"],
+  "keywords": [
+    "portfolio",
+    "express"
+  ],
   "author": "Shail Sharma",
   "license": "MIT",
   "dependencies": {
+    "@vercel/speed-insights": "^2.0.0",
     "express": "^4.21.2"
   }
 }
