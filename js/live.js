@@ -581,9 +581,14 @@
       .map(
         (c) => `
       <a href="${c.url || `https://github.com/${login}/${c.repo}`}" target="_blank" rel="noopener" class="commit-item">
-        <code class="commit-sha">${c.sha}</code>
-        <span class="commit-msg" title="${escapeAttr(c.message)}">${c.message}</span>
-        <span class="commit-meta"><span class="commit-repo">${c.repo}</span><span class="commit-time">${timeAgo(c.created_at)}</span></span>
+        <div class="commit-top">
+          <code class="commit-sha">${c.sha}</code>
+          <span class="commit-msg" title="${escapeAttr(c.message)}">${c.message}</span>
+        </div>
+        <div class="commit-meta">
+          <span class="commit-repo">${c.repo}</span>
+          <span class="commit-time">${timeAgo(c.created_at)}</span>
+        </div>
       </a>`
       )
       .join('');
