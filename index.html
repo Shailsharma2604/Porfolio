@@ -91,6 +91,21 @@
   <link rel="stylesheet" href="css/style.css?v=21">
 </head>
 <body>
+  <script>
+    (function () {
+      try {
+        if (localStorage.getItem('portfolio-perf-lite') === '1') {
+          document.body.classList.add('perf-lite', 'motion-lite');
+        } else if (
+          window.matchMedia('(max-width: 1024px)').matches ||
+          !window.matchMedia('(hover: hover) and (pointer: fine)').matches ||
+          window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        ) {
+          document.body.classList.add('motion-lite');
+        }
+      } catch (e) {}
+    })();
+  </script>
   <a href="#home" class="skip-link">Skip to content</a>
 
   <canvas class="bg-particles" id="bgParticles" aria-hidden="true" hidden></canvas>
@@ -1182,9 +1197,15 @@
       <span class="theme-label">Effects</span>
       <label class="toggle-row">
         <span>Particles</span>
-        <input type="checkbox" id="toggleParticles" checked>
+        <input type="checkbox" id="toggleParticles">
         <span class="toggle-slider"></span>
       </label>
+      <label class="toggle-row">
+        <span>Performance mode</span>
+        <input type="checkbox" id="togglePerfLite">
+        <span class="toggle-slider"></span>
+      </label>
+      <p class="theme-hint">Performance mode reduces motion, blur, and background effects for smoother scrolling.</p>
     </div>
 
     <button type="button" class="btn btn-glass btn-sm theme-reset" id="themeReset">Reset to default</button>

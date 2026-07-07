@@ -134,8 +134,9 @@
     });
   }
 
-  function renderGitHubEmbed(data) {
+  function renderGitHubEmbed(data, opts = {}) {
     if (!els.githubStatsEmbed) return;
+    const { deferStreak = false } = opts;
     const u = data?.user;
     const login = u?.login || STATIC_CONFIG.github;
     const profileUrl = `https://github.com/${login}`;
@@ -152,6 +153,21 @@
 
     const streakUrl =
       `https://streak-stats.demolab.com/?user=${encodeURIComponent(login)}&theme=transparent&hide_border=true&stroke=2563eb&ring=0ea5e9&fire=60a5fa&currStreakLabel=2563eb`;
+
+    const streakBlock = deferStreak
+      ? `<div class="github-embed-streak-wrap glass-card pop-in" style="--d:0.1s" data-streak-deferred="${encodeURIComponent(streakUrl)}" data-streak-login="${login}">
+        <p class="embed-fallback-msg feed-empty">Streak chart loads when you open Activity…</p>
+      </div>`
+      : `<div class="github-embed-streak-wrap glass-card pop-in" style="--d:0.1s">
+        <img
+          src="${streakUrl}"
+          alt="GitHub contribution streak for ${login}"
+          class="stats-img github-streak-img"
+          loading="lazy"
+          decoding="async"
+          data-embed-fallback="Streak chart unavailable — contributions still visible on GitHub"
+        >
+      </div>`;
 
     els.githubStatsEmbed.innerHTML = `
       <div class="github-embed-card glass-card pop-in" style="--d:0.05s">
@@ -177,18 +193,44 @@
         <a href="${profileUrl}" target="_blank" rel="noopener" class="btn btn-glass btn-sm">Open profile ↗</a>
         ${data.fallback ? '<p class="embed-fallback-msg">Live refresh unavailable — showing configured stats.</p>' : ''}
       </div>
-      <div class="github-embed-streak-wrap glass-card pop-in" style="--d:0.1s">
-        <img
-          src="${streakUrl}"
-          alt="GitHub contribution streak for ${login}"
-          class="stats-img github-streak-img"
-          loading="lazy"
-          data-embed-fallback="Streak chart unavailable — contributions still visible on GitHub"
-        >
-      </div>`;
+      ${streakBlock}`;
 
     initEmbedImageFallbacks();
+    initDeferredStreak();
     animateDynamicContent(els.githubStatsEmbed);
+    window.portfolioObserveGlassSolid?.(els.githubStatsEmbed);
+  }
+
+  function initDeferredStreak() {
+    const wrap = els.githubStatsEmbed?.querySelector('[data-streak-deferred]');
+    if (!wrap || wrap.dataset.streakBound) return;
+    wrap.dataset.streakBound = '1';
+    const loadStreak = () => {
+      if (wrap.dataset.streakLoaded) return;
+      wrap.dataset.streakLoaded = '1';
+      const url = decodeURIComponent(wrap.dataset.streakDeferred || '');
+      const login = wrap.dataset.streakLogin || STATIC_CONFIG.github;
+      wrap.innerHTML = `<img
+        src="${url}"
+        alt="GitHub contribution streak for ${login}"
+        class="stats-img github-streak-img"
+        loading="lazy"
+        decoding="async"
+        data-embed-fallback="Streak chart unavailable — contributions still visible on GitHub"
+      >`;
+      initEmbedImageFallbacks();
+    };
+    const activity = document.getElementById('activity');
+    if (!activity) {
+      loadStreak();
+      return;
+    }
+    new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) loadStreak();
+      },
+      { rootMargin: '200px 0px', threshold: 0 }
+    ).observe(activity);
   }
 
   function initMarqueePause() {
@@ -1308,7 +1350,7 @@
   }
 
   renderLinkedIn(STATIC_CONFIG);
-  renderGitHubEmbed(buildGitHubFallback(STATIC_CONFIG));
+  renderGitHubEmbed(buildGitHubFallback(STATIC_CONFIG), { deferStreak: true });
 
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) {

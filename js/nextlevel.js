@@ -3,8 +3,10 @@
   const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
 
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const mobile = window.matchMedia('(max-width: 768px)').matches;
+  const mobile = window.matchMedia('(max-width: 1024px)').matches;
   const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const perfLite = document.body.classList.contains('perf-lite') || localStorage.getItem('portfolio-perf-lite') === '1';
+  const motionLite = mobile || !finePointer || reduced || perfLite;
 
   /* ═══ Floating code snippets ═══ */
   const SNIPPETS = [
@@ -22,7 +24,7 @@
 
   function initCodeSnippets() {
     const layer = $('#bgCodeSnippets');
-    if (!layer || reduced || mobile) return;
+    if (!layer || reduced || mobile || perfLite) return;
 
     SNIPPETS.forEach((text, i) => {
       const el = document.createElement('span');
@@ -38,31 +40,40 @@
 
   /* ═══ Parallax layers ═══ */
   function initParallax() {
-    if (reduced || mobile) return;
+    if (reduced || mobile || perfLite) return;
 
     const orbs = $('.bg-orbs');
     const mesh = $('.bg-mesh');
     const heroVisual = $('.hero-visual');
     const heroText = $('.hero-text');
-    let parallaxTicking = false;
 
-    window.addEventListener(
-      'scroll',
-      () => {
-        if (document.hidden) return;
-        if (parallaxTicking) return;
-        parallaxTicking = true;
-        requestAnimationFrame(() => {
-          const y = window.scrollY;
-          if (orbs) orbs.style.transform = `translate3d(0, ${y * 0.12}px, 0)`;
-          if (mesh) mesh.style.transform = `translate3d(0, ${y * 0.06}px, 0)`;
-          if (heroVisual) heroVisual.style.transform = `translate3d(0, ${y * 0.08}px, 0)`;
-          if (heroText) heroText.style.transform = `translate3d(0, ${y * 0.04}px, 0)`;
-          parallaxTicking = false;
-        });
-      },
-      { passive: true }
-    );
+    const updateParallax = () => {
+      if (document.hidden || document.body.classList.contains('bg-anim-paused')) return;
+      const y = window.scrollY;
+      if (orbs) orbs.style.transform = `translate3d(0, ${y * 0.12}px, 0)`;
+      if (mesh) mesh.style.transform = `translate3d(0, ${y * 0.06}px, 0)`;
+      if (heroVisual) heroVisual.style.transform = `translate3d(0, ${y * 0.08}px, 0)`;
+      if (heroText) heroText.style.transform = `translate3d(0, ${y * 0.04}px, 0)`;
+    };
+
+    if (window.portfolioOnScroll) {
+      window.portfolioOnScroll(updateParallax);
+    } else {
+      let parallaxTicking = false;
+      window.addEventListener(
+        'scroll',
+        () => {
+          if (parallaxTicking) return;
+          parallaxTicking = true;
+          requestAnimationFrame(() => {
+            updateParallax();
+            parallaxTicking = false;
+          });
+        },
+        { passive: true }
+      );
+    }
+    updateParallax();
   }
 
   /* Hero avatar — gentle scale via CSS only (no heavy 3D tilt) */
@@ -125,11 +136,21 @@
   function initSkillRadar() {
     const canvas = $('#skillRadar');
     const wrap = canvas?.closest('.skill-radar-wrap');
-    if (!canvas || !wrap) return;
+    if (!canvas || !wrap || perfLite) return;
 
     const ctx = canvas.getContext('2d');
     let animProgress = reduced ? 1 : 0;
     let hovered = -1;
+    let drawQueued = false;
+
+    function queueDraw() {
+      if (drawQueued) return;
+      drawQueued = true;
+      requestAnimationFrame(() => {
+        drawQueued = false;
+        draw();
+      });
+    }
 
     function resize() {
       const rect = wrap.getBoundingClientRect();
@@ -228,7 +249,7 @@
     });
 
     canvas.addEventListener('mousemove', (e) => {
-      if (!finePointer) return;
+      if (!finePointer || motionLite) return;
       const rect = canvas.getBoundingClientRect();
       const mx = e.clientX - rect.left - rect.width / 2;
       const my = e.clientY - rect.top - rect.height / 2;
@@ -255,12 +276,12 @@
             ? `${RADAR_SKILLS[closest].label}: ${RADAR_SKILLS[closest].level}% proficiency`
             : 'Hover chart nodes for details';
       }
-      draw();
+      queueDraw();
     });
 
     canvas.addEventListener('mouseleave', () => {
       hovered = -1;
-      draw();
+      queueDraw();
     });
 
     new IntersectionObserver(
@@ -376,10 +397,10 @@
       renderCarousel();
     };
 
-    if (!reduced && !mobile) {
+    if (!reduced && !mobile && !perfLite) {
       setInterval(() => {
         const items = FEATURED.filter((p) => carouselFilter === 'all' || p.filter === carouselFilter);
-        if (items.length > 1 && !document.hidden) {
+        if (items.length > 1 && !document.hidden && !document.body.classList.contains('bg-anim-paused')) {
           carouselIdx = (carouselIdx + 1) % items.length;
           renderCarousel();
         }
@@ -760,11 +781,11 @@
             showMailtoFallback(data, json.mailto);
             return;
           }
-          if (json.code === 'send_failed' && json.mailto) {
+          if (json.mailto && (json.code === 'send_failed' || json.code === 'resend_sandbox_limit' || json.code === 'resend_rejected')) {
             showMailtoFallback(
               data,
               json.mailto,
-              `${json.error || 'Could not send your message.'} Try the email button below.`
+              json.error || 'Could not send your message. Try the email button below.'
             );
             return;
           }
@@ -828,9 +849,35 @@
   initContactForm();
   hookProjectFilters();
 
-  scheduleIdle(() => {
+  function bootHeavyVisuals() {
     initCodeSnippets();
     initParallax();
     initSkillRadar();
-  }, 1800);
+  }
+
+  if (motionLite) {
+    initSkillRadar();
+  } else {
+    const hero = $('.hero');
+    const skills = $('#skills');
+    const targets = [hero, skills].filter(Boolean);
+    if (!targets.length) {
+      scheduleIdle(bootHeavyVisuals, 1800);
+    } else {
+      let started = false;
+      const start = () => {
+        if (started) return;
+        started = true;
+        bootHeavyVisuals();
+      };
+      const io = new IntersectionObserver(
+        (entries) => {
+          if (entries.some((e) => e.isIntersecting)) start();
+        },
+        { rootMargin: '120px 0px', threshold: 0 }
+      );
+      targets.forEach((el) => io.observe(el));
+      scheduleIdle(start, 2500);
+    }
+  }
 })();

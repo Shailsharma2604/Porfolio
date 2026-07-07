@@ -104,6 +104,7 @@
   --bg-elevated: #0f172a;
   --bg-soft: #1e293b;
   --glass: rgba(255, 255, 255, 0.025);
+  --glass-solid: rgba(15, 23, 42, 0.94);
   --glass-border: rgba(255, 255, 255, 0.09);
   --glass-hover: rgba(255, 255, 255, 0.055);
   --glass-shine: rgba(255, 255, 255, 0.07);
@@ -126,6 +127,7 @@
   --bg-elevated: #ffffff;
   --bg-soft: #f1f5f9;
   --glass: rgba(255, 255, 255, 0.78);
+  --glass-solid: rgba(255, 255, 255, 0.96);
   --glass-border: rgba(15, 23, 42, 0.11);
   --glass-hover: rgba(255, 255, 255, 0.92);
   --glass-shine: rgba(255, 255, 255, 0.95);
@@ -225,10 +227,14 @@ svg {
   height: 55%;
   left: -25%;
   border-radius: 50%;
-  filter: blur(72px);
+  filter: blur(56px);
   opacity: 0.5;
-  will-change: transform;
   mix-blend-mode: screen;
+}
+
+.bg-aurora-band--2,
+.bg-aurora-band--3 {
+  display: none;
 }
 
 [data-mode="light"] .bg-aurora-band {
@@ -301,9 +307,13 @@ svg {
 .orb {
   position: absolute;
   border-radius: 50%;
-  filter: blur(88px);
-  will-change: transform;
+  filter: blur(64px);
   animation: orb-float var(--orb-dur, 24s) ease-in-out infinite alternate;
+}
+
+.orb-2,
+.orb-3 {
+  display: none;
 }
 
 .orb-1 {
@@ -484,6 +494,14 @@ a:hover { color: color-mix(in srgb, var(--primary) 75%, var(--secondary)); }
     inset 0 -1px 0 var(--glass-shine-edge);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
+}
+
+.glass-card.glass-solid,
+body.motion-lite .glass-card,
+body.perf-lite .glass-card {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background: var(--glass-solid);
 }
 
 .glass-card:hover {
@@ -4112,10 +4130,21 @@ body.motion-lite .glass-card:not(.cert-flip):not(.patent-spot-card)::before {
   .about-contact-item:nth-last-child(-n+3) { border-bottom: none; }
 }
 
+@media (max-width: 1024px) {
+  .bg-aurora {
+    display: none;
+  }
+
+  .bg-orbs {
+    display: none;
+  }
+}
+
 @media (max-width: 768px) {
   .glass-card {
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: var(--glass-solid);
   }
 
   .bg-particles {
@@ -4550,6 +4579,13 @@ body.motion-lite .glass-card:not(.cert-flip):not(.patent-spot-card)::before {
 .toggle-row input:checked + .toggle-slider::after {
   transform: translateX(20px);
   background: var(--primary);
+}
+
+.theme-hint {
+  margin: 0.35rem 0 0;
+  font-size: 0.72rem;
+  line-height: 1.45;
+  color: var(--text-dim);
 }
 
 .theme-reset {
@@ -6355,7 +6391,7 @@ body.modal-open { overflow: hidden; }
 }
 
 .parallax-layer {
-  will-change: transform;
+  transform: translateZ(0);
 }
 
 /* Devshell showcase */
@@ -7164,18 +7200,44 @@ body.motion-lite .metric-card,
 body.motion-lite .theme-panel,
 body.motion-lite .contact-channels .contact-email,
 body.motion-lite .contact-channels .contact-phone,
-body.motion-lite .back-top {
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+body.motion-lite .back-top,
+body.perf-lite .glass-card,
+body.perf-lite .nav,
+body.perf-lite .nav-panel,
+body.perf-lite .metric-card,
+body.perf-lite .theme-panel,
+body.perf-lite .contact-channels .contact-email,
+body.perf-lite .contact-channels .contact-phone,
+body.perf-lite .back-top,
+body.perf-lite .activity-panel,
+body.perf-lite .github-embed-card,
+body.perf-lite .github-embed-streak-wrap {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background: var(--glass-solid);
 }
 
-body.motion-lite .nav.scrolled {
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+body.motion-lite .nav.scrolled,
+body.perf-lite .nav.scrolled {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
-body.tab-hidden .commit-ticker {
-  animation-play-state: paused;
+body.tab-hidden .commit-ticker,
+body.tab-hidden #liveRibbonTrack,
+body.tab-hidden .marquee-inner,
+body.tab-hidden .code-snippet-float,
+body.tab-hidden .pulse-dot,
+body.tab-hidden .logo-dot,
+body.tab-hidden .theme-fab,
+body.bg-anim-paused .commit-ticker,
+body.bg-anim-paused #liveRibbonTrack,
+body.bg-anim-paused .marquee-inner,
+body.bg-anim-paused .code-snippet-float,
+body.bg-anim-paused .pulse-dot,
+body.bg-anim-paused .logo-dot,
+body.bg-anim-paused .theme-fab {
+  animation-play-state: paused !important;
 }
 
 body.tab-hidden .bg-aurora-band,
@@ -7190,6 +7252,11 @@ body.bg-anim-paused .bg-mesh::after {
   animation-play-state: paused;
 }
 
+body:not(.bg-anim-paused):not(.tab-hidden):not(.motion-lite):not(.perf-lite) .bg-aurora-band,
+body:not(.bg-anim-paused):not(.tab-hidden):not(.motion-lite):not(.perf-lite) .orb {
+  will-change: transform;
+}
+
 body.tab-hidden .bg-aurora-band,
 body.tab-hidden .orb,
 body.bg-anim-paused .bg-aurora-band,
@@ -7199,34 +7266,78 @@ body.bg-anim-paused .orb {
 
 body.motion-lite .bg-mesh,
 body.motion-lite .gradient-text,
-body.motion-lite .code-snippet-float {
+body.motion-lite .code-snippet-float,
+body.perf-lite .bg-mesh,
+body.perf-lite .gradient-text,
+body.perf-lite .code-snippet-float {
   animation: none;
 }
 
-body.motion-lite .bg-aurora {
-  opacity: 0.42;
-}
-
-body.motion-lite .bg-aurora-band,
-body.motion-lite .orb {
-  animation: none;
-}
-
-body.motion-lite .bg-orbs {
+body.motion-lite .bg-aurora,
+body.perf-lite .bg-aurora {
   display: none;
 }
 
-body.motion-lite .bg-stars {
+body.motion-lite .bg-aurora-band,
+body.motion-lite .orb,
+body.perf-lite .bg-aurora-band,
+body.perf-lite .orb {
+  animation: none;
+}
+
+body.motion-lite .bg-orbs,
+body.perf-lite .bg-orbs {
+  display: none;
+}
+
+body.motion-lite .bg-stars,
+body.perf-lite .bg-stars {
   opacity: 0.22;
 }
 
-body.motion-lite .bg-mesh::after {
+body.motion-lite .bg-mesh::after,
+body.perf-lite .bg-mesh::after {
   animation: none;
   opacity: 0.28;
 }
 
-body.motion-lite .bg-grid {
+body.motion-lite .bg-grid,
+body.perf-lite .bg-grid {
   opacity: 0.45;
+}
+
+body.perf-lite .bg-grain {
+  display: none;
+}
+
+body.perf-lite .hero-stagger {
+  animation: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+body.perf-lite .reveal,
+body.perf-lite .reveal-child,
+body.perf-lite .reveal-fade,
+body.perf-lite .reveal-scale,
+body.perf-lite .reveal-stagger > *,
+body.perf-lite .reveal-head .section-tag,
+body.perf-lite .reveal-head .section-title,
+body.perf-lite .reveal-head .section-sub {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+body.perf-lite .pop-in,
+body.perf-lite .content-swap,
+body.perf-lite .count-pop {
+  animation: none;
+  opacity: 1;
+  transform: none;
+}
+
+body.perf-lite .typed-cursor {
+  animation: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

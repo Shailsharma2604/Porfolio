@@ -1,4 +1,19 @@
-const { sendContactEmail, buildContactMailto, isLocalDev } = require('../lib/contact-mail');
+const {
+  sendContactEmail,
+  buildContactMailto,
+  isLocalDev,
+  PUBLIC_CONTACT_EMAIL,
+} = require('../lib/contact-mail');
+
+function contactFailurePayload({ name, email, message, result }) {
+  return {
+    error: result.userMessage || result.error || 'Could not send message. Please try again or email directly.',
+    code: result.code || result.reason || 'send_failed',
+    mailto: buildContactMailto({ name, email, message }),
+    contactEmail: PUBLIC_CONTACT_EMAIL,
+    detail: result.detail,
+  };
+}
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
@@ -19,20 +34,24 @@ module.exports = async (req, res) => {
   try {
     const result = await sendContactEmail({ name, email, message });
     if (!result.delivered) {
-      if (isLocalDev()) {
-        res.status(200).json({
-          ok: true,
-          message: 'Message logged locally (RESEND_API_KEY not set — not emailed)',
-          dev: true,
+      if (result.reason === 'not_configured') {
+        if (isLocalDev()) {
+          res.status(200).json({
+            ok: true,
+            message: 'Message logged locally (RESEND_API_KEY not set — not emailed)',
+            dev: true,
+          });
+          return;
+        }
+        res.status(503).json({
+          error: 'Email delivery is not configured on this deployment.',
+          code: 'not_configured',
+          mailto: buildContactMailto({ name, email, message }),
+          contactEmail: PUBLIC_CONTACT_EMAIL,
         });
         return;
       }
-      res.status(503).json({
-        error: 'Email delivery is not configured on this deployment.',
-        code: 'not_configured',
-        mailto: buildContactMailto({ name, email, message }),
-        contactEmail: (process.env.CONTACT_TO_EMAIL || 'shail020604@gmail.com').trim(),
-      });
+      res.status(502).json(contactFailurePayload({ name, email, message, result }));
       return;
     }
     res.status(200).json({ ok: true, message: 'Message sent', id: result.emailId || undefined });
@@ -42,7 +61,7 @@ module.exports = async (req, res) => {
       error: err.message || 'Could not send message. Please try again or email directly.',
       code: 'send_failed',
       mailto: buildContactMailto({ name, email, message }),
-      contactEmail: (process.env.CONTACT_TO_EMAIL || 'shail020604@gmail.com').trim(),
+      contactEmail: PUBLIC_CONTACT_EMAIL,
     });
   }
 };

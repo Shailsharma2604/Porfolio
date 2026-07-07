@@ -39,20 +39,25 @@ git push -u origin main
 | `GITHUB_TOKEN` | GitHub PAT (no scopes) — [create token](https://github.com/settings/tokens) |
 | `GITHUB_USERNAME` | `Shailsharma2604` |
 | `RESEND_API_KEY` | [Resend](https://resend.com) API key — **enables contact form email** (without it, the form offers a mailto fallback in production) |
-| `CONTACT_TO_EMAIL` | Inbox for form messages (default: `shail020604@gmail.com`) |
-| `RESEND_FROM_EMAIL` | *(Optional)* Verified sender address in Resend (default: `onboarding@resend.dev` — sandbox only sends to your Resend account email until you verify a domain) |
+| `CONTACT_TO_EMAIL` | Inbox for form messages (default: `shailsharma020604@gmail.com` — your verified Resend account email) |
+| `RESEND_FROM_EMAIL` | *(Optional)* Sender address in Resend (default: `onboarding@resend.dev`) |
+
+> **Resend testing / no verified domain:** With the default `onboarding@resend.dev` sender, Resend **only delivers to the email on your Resend account** (`shailsharma020604@gmail.com`). Sending to any other inbox returns a 403 until you [verify a domain](https://resend.com/domains) and set `RESEND_FROM_EMAIL` to an address on that domain (e.g. `Portfolio <hello@yourdomain.com>`). The portfolio still displays `shail020604@gmail.com` publicly; mailto fallbacks use that address. Automatic delivery uses `CONTACT_TO_EMAIL` (or auto-routes to the Resend owner email in sandbox mode).
 
 6. Click **Deploy**
 
 ### Contact form (Resend)
 
 1. Sign up at [resend.com](https://resend.com) and create an API key.
-2. In Vercel → **Settings** → **Environment Variables**, add `RESEND_API_KEY`.
-3. *(Recommended for production)* Verify your domain in Resend, then set `RESEND_FROM_EMAIL` to e.g. `Portfolio <hello@yourdomain.com>`.
-4. Set `CONTACT_TO_EMAIL` to the inbox that should receive messages (default: `shail020604@gmail.com`).
-5. Redeploy after adding env vars.
+2. In Vercel → **Settings** → **Environment Variables**, add:
+   - `RESEND_API_KEY` — your Resend API key
+   - `CONTACT_TO_EMAIL` — `shailsharma020604@gmail.com` (must match your Resend account email while using sandbox sender)
+   - `RESEND_FROM_EMAIL` — `onboarding@resend.dev` (default; sandbox only)
+3. **Testing without a verified domain:** emails only deliver to your Resend account email (`shailsharma020604@gmail.com`). If `CONTACT_TO_EMAIL` is set to a different address (e.g. `shail020604@gmail.com`), the server auto-routes to the owner email and logs a warning.
+4. **Production (custom domain):** verify your domain at [resend.com/domains](https://resend.com/domains), set `RESEND_FROM_EMAIL` to e.g. `Portfolio <hello@yourdomain.com>`, then set `CONTACT_TO_EMAIL` to any inbox you control.
+5. Redeploy after adding or changing env vars.
 
-Without `RESEND_API_KEY`, production visitors still see a **mailto** button with their message pre-filled; local `npm start` logs submissions to the terminal instead of emailing.
+Without `RESEND_API_KEY`, production visitors still see a **mailto** button pre-filled to `shail020604@gmail.com`; local `npm start` logs submissions to the terminal instead of emailing.
 
 Your site will be live at:
 

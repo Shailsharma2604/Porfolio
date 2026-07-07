@@ -3,11 +3,46 @@
   const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
 
   const isMobile = window.matchMedia('(max-width: 768px)').matches;
+  const isTablet = window.matchMedia('(max-width: 1024px)').matches;
   const isCoarse = !window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const motionLite = isMobile || isCoarse || prefersReducedMotion;
+  const PERF_LITE_KEY = 'portfolio-perf-lite';
+
+  let perfLite = false;
+  try {
+    perfLite = localStorage.getItem(PERF_LITE_KEY) === '1';
+  } catch {}
+
+  const motionLite = isMobile || isTablet || isCoarse || prefersReducedMotion || perfLite;
 
   if (motionLite) document.body.classList.add('motion-lite');
+  if (perfLite) document.body.classList.add('perf-lite');
+
+  /* Single rAF scroll scheduler — all scroll work shares one frame */
+  const scrollHandlers = new Set();
+  let scrollRafScheduled = false;
+
+  function runScrollHandlers() {
+    scrollRafScheduled = false;
+    scrollHandlers.forEach((fn) => {
+      try {
+        fn();
+      } catch (err) {
+        console.warn('Scroll handler error:', err);
+      }
+    });
+  }
+
+  function scheduleScrollRun() {
+    if (scrollRafScheduled) return;
+    scrollRafScheduled = true;
+    requestAnimationFrame(runScrollHandlers);
+  }
+
+  window.portfolioOnScroll = (fn) => {
+    scrollHandlers.add(fn);
+    return () => scrollHandlers.delete(fn);
+  };
 
   function scheduleIdle(fn, timeout = 2000) {
     if ('requestIdleCallback' in window) requestIdleCallback(fn, { timeout });
@@ -109,7 +144,7 @@
     document.body.classList.toggle('tab-hidden', document.hidden);
     if (document.hidden) {
       stopParticles();
-    } else if (themeState.particles && particlesVisible && !isCoarse && !isMobile) {
+    } else if (themeState.particles && particlesVisible && !isCoarse && !isMobile && !perfLite) {
       scheduleIdle(() => initParticles(), 300);
     }
     updateBgAnimPause();
@@ -131,7 +166,7 @@
   }
 
   function initParticles() {
-    if (!canvas || !themeState.particles || isCoarse || isMobile) {
+    if (!canvas || !themeState.particles || isCoarse || isMobile || perfLite) {
       stopParticles();
       return;
     }
@@ -285,15 +320,34 @@
     if (colorInput && themeState.custom) colorInput.value = themeState.custom;
     if (hexLabel) hexLabel.textContent = themeState.custom || colorInput?.value || '#2563eb';
 
-    const useParticles = themeState.particles && !isCoarse && !isMobile;
+    const useParticles = themeState.particles && !isCoarse && !isMobile && !perfLite;
     if (canvas) canvas.style.opacity = useParticles ? '0.6' : '0';
 
     const toggleParticles = $('#toggleParticles');
     if (toggleParticles) toggleParticles.checked = themeState.particles;
 
+    const togglePerfLite = $('#togglePerfLite');
+    if (togglePerfLite) togglePerfLite.checked = perfLite;
+
     if (useParticles) scheduleIdle(() => initParticles(), 1500);
     else stopParticles();
   }
+
+  function setPerfLite(enabled) {
+    perfLite = enabled;
+    try {
+      localStorage.setItem(PERF_LITE_KEY, enabled ? '1' : '0');
+    } catch {}
+    document.body.classList.toggle('perf-lite', enabled);
+    const shouldMotionLite = isMobile || isTablet || isCoarse || prefersReducedMotion || enabled;
+    document.body.classList.toggle('motion-lite', shouldMotionLite);
+    applyTheme();
+    updateBgAnimPause();
+  }
+
+  window.portfolioSetPerfLite = setPerfLite;
+  window.portfolioIsPerfLite = () => perfLite;
+  window.portfolioIsMotionLite = () => motionLite || perfLite;
 
   function setMode(mode) {
     themeState.mode = mode;
@@ -378,6 +432,10 @@
     applyTheme();
   });
 
+  $('#togglePerfLite')?.addEventListener('change', (e) => {
+    setPerfLite(e.target.checked);
+  });
+
   applyTheme();
 
   /* ═══ Back-to-top (throttled) ═══ */
@@ -421,6 +479,7 @@
     document.addEventListener(
       'mousemove',
       throttleRaf((e) => {
+        if (document.body.classList.contains('perf-lite') || document.body.classList.contains('motion-lite')) return;
         glowCards.forEach((card) => {
           const rect = card.getBoundingClientRect();
           if (e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom) {
@@ -696,19 +755,20 @@
   window.portfolioUpdateActiveNav = updateActiveNav;
 
   function updateBgAnimPause() {
-    const pause = document.hidden || window.scrollY > window.innerHeight * 1.35;
+    const pause = document.hidden || perfLite || window.scrollY > window.innerHeight * 0.85;
     document.body.classList.toggle('bg-anim-paused', pause);
   }
 
-  const onScroll = throttleRaf(() => {
+  const onScrollWork = () => {
     const y = window.scrollY;
     nav?.classList.toggle('scrolled', y > 40);
     backTop?.classList.toggle('visible', y > 500);
     updateActiveNav();
     updateBgAnimPause();
-  });
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
+  };
+  scrollHandlers.add(onScrollWork);
+  window.addEventListener('scroll', scheduleScrollRun, { passive: true });
+  scheduleScrollRun();
   updateActiveNav();
   updateBgAnimPause();
 
@@ -723,20 +783,22 @@
     'Enterprise lakehouse engineering with modern AI…',
     'Final-year student shipping production-grade work…',
   ];
-  if (typedEl && motionLite) {
+  if (typedEl && (motionLite || perfLite)) {
     typedEl.textContent = phrases[0];
     typedEl.closest('.hero-tagline')?.querySelector('.typed-cursor')?.classList.add('hidden');
   } else if (typedEl) {
     let phraseIdx = 0;
     let charIdx = 0;
     let deleting = false;
+    let typeTimer = null;
     function typeTick() {
+      if (document.hidden || perfLite) return;
       const phrase = phrases[phraseIdx];
       if (!deleting) {
         typedEl.textContent = phrase.slice(0, ++charIdx);
         if (charIdx === phrase.length) {
           deleting = true;
-          setTimeout(typeTick, 2200);
+          typeTimer = setTimeout(typeTick, 2200);
           return;
         }
       } else {
@@ -746,9 +808,35 @@
           phraseIdx = (phraseIdx + 1) % phrases.length;
         }
       }
-      setTimeout(typeTick, deleting ? 35 : 55);
+      typeTimer = setTimeout(typeTick, deleting ? 35 : 55);
     }
-    setTimeout(typeTick, 600);
+    typeTimer = setTimeout(typeTick, 600);
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        if (typeTimer) clearTimeout(typeTimer);
+      } else if (!perfLite) {
+        typeTimer = setTimeout(typeTick, 400);
+      }
+    });
+  }
+
+  /* Replace backdrop-filter on below-fold glass cards (desktop only) */
+  if (!motionLite && !prefLite && !prefersReducedMotion) {
+    const glassSolidObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && entry.boundingClientRect.top > window.innerHeight * 0.45) {
+            entry.target.classList.add('glass-solid');
+            glassSolidObserver.unobserve(entry.target);
+          }
+        });
+      },
+      { rootMargin: '80px 0px', threshold: 0.01 }
+    );
+    $$('.glass-card').forEach((el) => glassSolidObserver.observe(el));
+    window.portfolioObserveGlassSolid = (root = document) => {
+      root.querySelectorAll('.glass-card:not(.glass-solid)').forEach((el) => glassSolidObserver.observe(el));
+    };
   }
 
   /* ─── Back to top ─── */
