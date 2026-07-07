@@ -94,18 +94,9 @@
     });
   }
 
-  /* ═══ Career timeline rail progress ═══ */
+  /* ═══ Experience card scroll highlights ═══ */
   function initTimelineProgress() {
-    const rail = $('.exp-rail');
-    const timeline = $('.exp-timeline');
-    if (!rail || !timeline || reduced) return;
-
-    new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) rail.classList.add('active');
-      },
-      { threshold: 0.2 }
-    ).observe(timeline);
+    if (reduced) return;
 
     $$('.exp-card').forEach((card, i) => {
       card.style.setProperty('--exp-i', i);
@@ -681,16 +672,13 @@
       return `mailto:shail020604@gmail.com?subject=${subject}&body=${body}`;
     }
 
-    function showMailtoFallback(data, mailtoUrl, prefix) {
+    function showMailtoFallback(data, mailtoUrl, message) {
       const url = mailtoUrl || buildMailtoFromForm(data);
       if (!formError) return;
-      const lead =
-        prefix ||
-        'Your message wasn’t sent automatically — email delivery isn’t configured on the server yet. Use the button below to open your email app with your message pre-filled.';
+      const lead = message || 'Tap below to send via your email app.';
       formError.classList.add('contact-form-fallback');
-      formError.innerHTML = `<span>${lead}</span> <a href="${url}" class="btn btn-primary btn-sm contact-mailto-btn">Send via email app</a>`;
+      formError.innerHTML = `<span>${lead}</span> <a href="${url}" class="btn btn-primary btn-sm contact-mailto-btn">Open email app</a>`;
       formError.hidden = false;
-      window.portfolioToast?.('Use the button below to email directly', 'error');
     }
 
     function showFormError(message) {
@@ -777,19 +765,20 @@
         }
 
         if (!res.ok) {
-          if (json.code === 'not_configured') {
-            showMailtoFallback(data, json.mailto);
+          if (json.fallback === 'mailto' && json.mailto) {
+            showMailtoFallback(data, json.mailto, json.message);
             return;
           }
-          if (json.mailto && (json.code === 'send_failed' || json.code === 'resend_sandbox_limit' || json.code === 'resend_rejected')) {
-            showMailtoFallback(
-              data,
-              json.mailto,
-              json.error || 'Could not send your message. Try the email button below.'
-            );
+          if (json.code === 'not_configured' && json.mailto) {
+            showMailtoFallback(data, json.mailto, json.message);
             return;
           }
           throw new Error(json.error || json.message || `Request failed (${res.status})`);
+        }
+
+        if (json.fallback === 'mailto' && json.mailto) {
+          showMailtoFallback(data, json.mailto, json.message);
+          return;
         }
 
         if (json.dev) {
@@ -808,6 +797,10 @@
         form.hidden = true;
         success.hidden = false;
         success.classList.add('show');
+        const successNote = success.querySelector('p');
+        if (successNote && json.message) {
+          successNote.textContent = json.message;
+        }
         window.portfolioToast?.('Message sent — thanks for reaching out!', 'success');
       } catch (err) {
         const message = err?.message || 'Could not send your message.';

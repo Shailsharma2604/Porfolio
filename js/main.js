@@ -637,6 +637,11 @@
     observeReveal(el);
   });
 
+  $$('.highlights-strip, .achievements-bar').forEach((el) => {
+    el.classList.add('reveal-fade');
+    observeReveal(el);
+  });
+
   const staggerSelectors = [
     '.exp-grid',
     '.projects-masonry',

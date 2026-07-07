@@ -1,19 +1,4 @@
-const {
-  sendContactEmail,
-  buildContactMailto,
-  isLocalDev,
-  PUBLIC_CONTACT_EMAIL,
-} = require('../lib/contact-mail');
-
-function contactFailurePayload({ name, email, message, result }) {
-  return {
-    error: result.userMessage || result.error || 'Could not send message. Please try again or email directly.',
-    code: result.code || result.reason || 'send_failed',
-    mailto: buildContactMailto({ name, email, message }),
-    contactEmail: PUBLIC_CONTACT_EMAIL,
-    detail: result.detail,
-  };
-}
+const { sendContactEmail, buildContactHandlerResponse } = require('../lib/contact-mail');
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
@@ -33,35 +18,14 @@ module.exports = async (req, res) => {
 
   try {
     const result = await sendContactEmail({ name, email, message });
-    if (!result.delivered) {
-      if (result.reason === 'not_configured') {
-        if (isLocalDev()) {
-          res.status(200).json({
-            ok: true,
-            message: 'Message logged locally (RESEND_API_KEY not set — not emailed)',
-            dev: true,
-          });
-          return;
-        }
-        res.status(503).json({
-          error: 'Email delivery is not configured on this deployment.',
-          code: 'not_configured',
-          mailto: buildContactMailto({ name, email, message }),
-          contactEmail: PUBLIC_CONTACT_EMAIL,
-        });
-        return;
-      }
-      res.status(502).json(contactFailurePayload({ name, email, message, result }));
-      return;
-    }
-    res.status(200).json({ ok: true, message: 'Message sent', id: result.emailId || undefined });
+    const { status, body } = buildContactHandlerResponse({ name, email, message }, result);
+    res.status(status).json(body);
   } catch (err) {
     console.error('[contact]', err.message);
-    res.status(502).json({
-      error: err.message || 'Could not send message. Please try again or email directly.',
-      code: 'send_failed',
-      mailto: buildContactMailto({ name, email, message }),
-      contactEmail: PUBLIC_CONTACT_EMAIL,
-    });
+    const { status, body } = buildContactHandlerResponse(
+      { name, email, message },
+      { delivered: false, reason: 'mailto_fallback', code: 'send_failed', detail: err.message }
+    );
+    res.status(status).json(body);
   }
 };

@@ -39,7 +39,7 @@ git push -u origin main
 | `GITHUB_TOKEN` | GitHub PAT (no scopes) — [create token](https://github.com/settings/tokens) |
 | `GITHUB_USERNAME` | `Shailsharma2604` |
 | `RESEND_API_KEY` | [Resend](https://resend.com) API key — **enables contact form email** (without it, the form offers a mailto fallback in production) |
-| `CONTACT_TO_EMAIL` | Inbox for form messages (default: `shailsharma020604@gmail.com` — your verified Resend account email) |
+| `CONTACT_TO_EMAIL` | `shailsharma020604@gmail.com` — must match your Resend account email while using the sandbox sender (`onboarding@resend.dev`) |
 | `RESEND_FROM_EMAIL` | *(Optional)* Sender address in Resend (default: `onboarding@resend.dev`) |
 
 > **Resend testing / no verified domain:** With the default `onboarding@resend.dev` sender, Resend **only delivers to the email on your Resend account** (`shailsharma020604@gmail.com`). Sending to any other inbox returns a 403 until you [verify a domain](https://resend.com/domains) and set `RESEND_FROM_EMAIL` to an address on that domain (e.g. `Portfolio <hello@yourdomain.com>`). The portfolio still displays `shail020604@gmail.com` publicly; mailto fallbacks use that address. Automatic delivery uses `CONTACT_TO_EMAIL` (or auto-routes to the Resend owner email in sandbox mode).

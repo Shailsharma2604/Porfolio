@@ -286,41 +286,6 @@ END:VCARD`;
   shortcutsOverlay?.addEventListener('click', closeShortcuts);
   $('#shortcutsClose')?.addEventListener('click', closeShortcuts);
 
-  /* ─── Section dots (mobile / tablet) ─── */
-  const sectionDots = $('#sectionDots');
-  if (sectionDots) {
-    sectionDots.innerHTML = SECTIONS.map(
-      (s) =>
-        `<a href="#${s.id}" class="section-dot" data-section="${s.id}" title="${s.label}"><span class="section-dot-label">${s.label}</span></a>`
-    ).join('');
-
-    sectionDots.querySelectorAll('.section-dot').forEach((dot) => {
-      dot.addEventListener('click', (e) => {
-        e.preventDefault();
-        const el = document.getElementById(dot.dataset.section);
-        smoothScrollTo(el);
-        history.replaceState(null, '', `#${dot.dataset.section}`);
-      });
-    });
-
-    const dotObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            $$('.section-dot').forEach((d) =>
-              d.classList.toggle('active', d.dataset.section === entry.target.id)
-            );
-          }
-        });
-      },
-      { threshold: 0.35, rootMargin: '-80px 0px -55% 0px' }
-    );
-    SECTIONS.forEach((s) => {
-      const el = document.getElementById(s.id);
-      if (el) dotObserver.observe(el);
-    });
-  }
-
   /* ─── Filter tabs (simple active state, no sliding indicator) ─── */
   window.portfolioSyncFilterIndicator = () => {};
 
