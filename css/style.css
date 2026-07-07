@@ -6995,6 +6995,30 @@ body.modal-open { overflow: hidden; }
   text-decoration: underline;
 }
 
+.contact-form-error.contact-form-fallback {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem 1rem;
+  background: rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.35);
+  color: var(--text-muted);
+}
+
+.contact-form-fallback .contact-mailto-btn {
+  flex-shrink: 0;
+}
+
+#activity,
+#projects,
+#patents,
+#writing,
+#learning,
+#certifications {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 640px;
+}
+
 @media (min-width: 1024px) {
   .section-dots { display: none !important; }
 }
@@ -7158,6 +7182,19 @@ body.tab-hidden .bg-aurora-band,
 body.tab-hidden .orb,
 body.tab-hidden .bg-mesh::after {
   animation-play-state: paused;
+}
+
+body.bg-anim-paused .bg-aurora-band,
+body.bg-anim-paused .orb,
+body.bg-anim-paused .bg-mesh::after {
+  animation-play-state: paused;
+}
+
+body.tab-hidden .bg-aurora-band,
+body.tab-hidden .orb,
+body.bg-anim-paused .bg-aurora-band,
+body.bg-anim-paused .orb {
+  will-change: auto;
 }
 
 body.motion-lite .bg-mesh,

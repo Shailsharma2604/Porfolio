@@ -49,6 +49,7 @@
     window.addEventListener(
       'scroll',
       () => {
+        if (document.hidden) return;
         if (parallaxTicking) return;
         parallaxTicking = true;
         requestAnimationFrame(() => {
@@ -98,12 +99,17 @@
     $$('.exp-card').forEach((card, i) => {
       card.style.setProperty('--exp-i', i);
       card.classList.add('exp-milestone');
-      if (reduced) return;
-      new IntersectionObserver(
-        ([entry]) => card.classList.toggle('in-view', entry.isIntersecting),
-        { threshold: 0.4 }
-      ).observe(card);
     });
+
+    if (!reduced) {
+      const cardObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => entry.target.classList.toggle('in-view', entry.isIntersecting));
+        },
+        { threshold: 0.4 }
+      );
+      $$('.exp-card').forEach((card) => cardObserver.observe(card));
+    }
   }
 
   /* ═══ Skills radar chart ═══ */
@@ -642,6 +648,28 @@
       if (!formError) return;
       formError.hidden = true;
       formError.textContent = '';
+      formError.classList.remove('contact-form-fallback');
+      formError.innerHTML = '';
+    }
+
+    function buildMailtoFromForm(data) {
+      const subject = encodeURIComponent(`Portfolio contact from ${data.name.trim()}`);
+      const body = encodeURIComponent(
+        `Hi Shail,\n\n${data.message.trim()}\n\n— ${data.name.trim()} (${data.email.trim()})`
+      );
+      return `mailto:shail020604@gmail.com?subject=${subject}&body=${body}`;
+    }
+
+    function showMailtoFallback(data, mailtoUrl, prefix) {
+      const url = mailtoUrl || buildMailtoFromForm(data);
+      if (!formError) return;
+      const lead =
+        prefix ||
+        'Your message wasn’t sent automatically — email delivery isn’t configured on the server yet. Use the button below to open your email app with your message pre-filled.';
+      formError.classList.add('contact-form-fallback');
+      formError.innerHTML = `<span>${lead}</span> <a href="${url}" class="btn btn-primary btn-sm contact-mailto-btn">Send via email app</a>`;
+      formError.hidden = false;
+      window.portfolioToast?.('Use the button below to email directly', 'error');
     }
 
     function showFormError(message) {
@@ -728,7 +756,32 @@
         }
 
         if (!res.ok) {
+          if (json.code === 'not_configured') {
+            showMailtoFallback(data, json.mailto);
+            return;
+          }
+          if (json.code === 'send_failed' && json.mailto) {
+            showMailtoFallback(
+              data,
+              json.mailto,
+              `${json.error || 'Could not send your message.'} Try the email button below.`
+            );
+            return;
+          }
           throw new Error(json.error || json.message || `Request failed (${res.status})`);
+        }
+
+        if (json.dev) {
+          form.hidden = true;
+          success.hidden = false;
+          success.classList.add('show');
+          const devNote = success.querySelector('p');
+          if (devNote) {
+            devNote.textContent =
+              'Logged locally for testing (RESEND_API_KEY not set — not emailed). In production, set the key in Vercel env vars.';
+          }
+          window.portfolioToast?.('Logged locally — not emailed (dev mode)', 'success');
+          return;
         }
 
         form.hidden = true;
@@ -738,10 +791,12 @@
       } catch (err) {
         const message = err?.message || 'Could not send your message.';
         const isNetworkError = err instanceof TypeError && /fetch|network/i.test(String(err.message || err));
-        const hint = isNetworkError
-          ? ' Start the server with npm start, or email directly.'
-          : ' You can also email shail020604@gmail.com directly.';
-        showFormError(message + hint);
+        if (isNetworkError) {
+          showFormError(message + ' Start the server with npm start, or use the email button below.');
+          showMailtoFallback(data);
+        } else {
+          showFormError(message + ' You can also email shail020604@gmail.com directly.');
+        }
         window.portfolioToast?.(message, 'error');
       } finally {
         btn.disabled = false;

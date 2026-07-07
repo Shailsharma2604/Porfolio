@@ -38,10 +38,21 @@ git push -u origin main
 |-----|--------|
 | `GITHUB_TOKEN` | GitHub PAT (no scopes) — [create token](https://github.com/settings/tokens) |
 | `GITHUB_USERNAME` | `Shailsharma2604` |
-| `RESEND_API_KEY` | [Resend](https://resend.com) API key — **required for contact form email** |
+| `RESEND_API_KEY` | [Resend](https://resend.com) API key — **enables contact form email** (without it, the form offers a mailto fallback in production) |
 | `CONTACT_TO_EMAIL` | Inbox for form messages (default: `shail020604@gmail.com`) |
+| `RESEND_FROM_EMAIL` | *(Optional)* Verified sender address in Resend (default: `onboarding@resend.dev` — sandbox only sends to your Resend account email until you verify a domain) |
 
 6. Click **Deploy**
+
+### Contact form (Resend)
+
+1. Sign up at [resend.com](https://resend.com) and create an API key.
+2. In Vercel → **Settings** → **Environment Variables**, add `RESEND_API_KEY`.
+3. *(Recommended for production)* Verify your domain in Resend, then set `RESEND_FROM_EMAIL` to e.g. `Portfolio <hello@yourdomain.com>`.
+4. Set `CONTACT_TO_EMAIL` to the inbox that should receive messages (default: `shail020604@gmail.com`).
+5. Redeploy after adding env vars.
+
+Without `RESEND_API_KEY`, production visitors still see a **mailto** button with their message pre-filled; local `npm start` logs submissions to the terminal instead of emailing.
 
 Your site will be live at:
 
@@ -86,7 +97,7 @@ npm run vercel:dev
 | Holopin / LinkedIn | Yes |
 | Resume download | Yes (`assets/resume.pdf`) |
 | Theme switcher | Yes |
-| Contact form email | Yes (`/api/contact` → Gmail via Resend Send API; see [CONTACT_FORM.md](CONTACT_FORM.md)) |
+| Contact form email | Yes with `RESEND_API_KEY` (`/api/contact` → Resend). Without the key: local `npm start` logs submissions; production shows a pre-filled **mailto** fallback |
 
 ---
 

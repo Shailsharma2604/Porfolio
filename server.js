@@ -28,7 +28,7 @@ const { getGitHubData, buildStaticFallback } = require('./lib/github-data');
 const { getSocialConfig } = require('./lib/social-config');
 const { getPatentsData } = require('./lib/patents-data');
 const { getLinkedInPhotoMeta, fetchImageBuffer, CACHE_TTL_MS } = require('./lib/linkedin-photo');
-const { sendContactEmail } = require('./lib/contact-mail');
+const { sendContactEmail, buildContactMailto, isLocalDev } = require('./lib/contact-mail');
 const { getLinkedInProfileMeta, enrichSocialConfig, CACHE_TTL_MS: PROFILE_CACHE_MS } = require('./lib/linkedin-profile');
 
 const app = express();
@@ -145,9 +145,18 @@ app.post('/api/contact', async (req, res) => {
   try {
     const result = await sendContactEmail({ name, email, message });
     if (!result.delivered) {
+      if (isLocalDev()) {
+        return res.json({
+          ok: true,
+          message: 'Message logged locally (RESEND_API_KEY not set — not emailed)',
+          dev: true,
+        });
+      }
       return res.status(503).json({
-        error: 'Contact email is not configured. Set RESEND_API_KEY in .env (or Vercel env vars).',
+        error: 'Email delivery is not configured on this deployment.',
         code: 'not_configured',
+        mailto: buildContactMailto({ name, email, message }),
+        contactEmail: (process.env.CONTACT_TO_EMAIL || 'shail020604@gmail.com').trim(),
       });
     }
     res.json({ ok: true, message: 'Message sent', id: result.emailId || undefined });
@@ -156,6 +165,8 @@ app.post('/api/contact', async (req, res) => {
     res.status(502).json({
       error: err.message || 'Could not send message. Please try again or email directly.',
       code: 'send_failed',
+      mailto: buildContactMailto({ name, email, message }),
+      contactEmail: (process.env.CONTACT_TO_EMAIL || 'shail020604@gmail.com').trim(),
     });
   }
 });

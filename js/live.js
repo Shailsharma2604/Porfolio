@@ -320,7 +320,7 @@
   }
 
   function updateClock() {
-    if (!els.liveClock) return;
+    if (!els.liveClock || document.hidden) return;
     els.liveClock.textContent =
       new Intl.DateTimeFormat('en-IN', {
         timeZone: 'Asia/Kolkata',
@@ -334,7 +334,9 @@
   function startCountdown() {
     countdown = REFRESH_SEC;
     if (countdownTimer) clearInterval(countdownTimer);
+    if (document.hidden) return;
     countdownTimer = setInterval(() => {
+      if (document.hidden) return;
       countdown -= 1;
       if (els.countdown) {
         const m = Math.floor(countdown / 60);
@@ -1308,6 +1310,42 @@
   renderLinkedIn(STATIC_CONFIG);
   renderGitHubEmbed(buildGitHubFallback(STATIC_CONFIG));
 
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      if (countdownTimer) clearInterval(countdownTimer);
+      countdownTimer = null;
+    } else {
+      updateClock();
+      startCountdown();
+    }
+  });
+
+  function deferBootLive() {
+    const targets = ['#patents', '#activity', '#projects']
+      .map((sel) => document.querySelector(sel))
+      .filter(Boolean);
+    if (!targets.length) {
+      bootLive();
+      return;
+    }
+
+    let started = false;
+    const start = () => {
+      if (started) return;
+      started = true;
+      bootLive();
+    };
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) start();
+      },
+      { rootMargin: '320px 0px', threshold: 0 }
+    );
+    targets.forEach((el) => io.observe(el));
+    setTimeout(start, 4500);
+  }
+
   function bootLive() {
     initTabs();
     initPatentFilters();
@@ -1319,5 +1357,5 @@
     loadAll();
   }
 
-  scheduleIdle(bootLive, 1200);
+  scheduleIdle(deferBootLive, 900);
 })();

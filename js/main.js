@@ -107,6 +107,12 @@
 
   document.addEventListener('visibilitychange', () => {
     document.body.classList.toggle('tab-hidden', document.hidden);
+    if (document.hidden) {
+      stopParticles();
+    } else if (themeState.particles && particlesVisible && !isCoarse && !isMobile) {
+      scheduleIdle(() => initParticles(), 300);
+    }
+    updateBgAnimPause();
   });
 
   if (canvas) {
@@ -130,6 +136,10 @@
       return;
     }
     if (particlesReady && animId) return;
+    if (particlesReady && !animId) {
+      draw();
+      return;
+    }
     const ctx = canvas.getContext('2d');
     let particleRgb = getComputedStyle(html).getPropertyValue('--primary-rgb').trim() || '139, 92, 246';
 
@@ -153,9 +163,12 @@
     }));
 
     function draw() {
-      animId = requestAnimationFrame(draw);
-      if (!themeState.particles || document.hidden || !particlesVisible) return;
+      if (!themeState.particles || document.hidden || !particlesVisible) {
+        animId = null;
+        return;
+      }
 
+      animId = requestAnimationFrame(draw);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       const linkDist = 90;
       const linkDistSq = linkDist * linkDist;
@@ -682,15 +695,22 @@
   window.portfolioGetActiveSection = getActiveSectionId;
   window.portfolioUpdateActiveNav = updateActiveNav;
 
+  function updateBgAnimPause() {
+    const pause = document.hidden || window.scrollY > window.innerHeight * 1.35;
+    document.body.classList.toggle('bg-anim-paused', pause);
+  }
+
   const onScroll = throttleRaf(() => {
     const y = window.scrollY;
     nav?.classList.toggle('scrolled', y > 40);
     backTop?.classList.toggle('visible', y > 500);
     updateActiveNav();
+    updateBgAnimPause();
   });
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
   updateActiveNav();
+  updateBgAnimPause();
 
   /* ═══ Nav mobile drawer ═══ */
 
