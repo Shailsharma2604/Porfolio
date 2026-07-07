@@ -88,12 +88,37 @@ Edit `config/social.json` and set:
 | **Dev Shell** | Auto-typing terminal showcase + interactive shell (`\` key) |
 | **Project carousel** | Featured spotlight with filter sync & auto-advance |
 | **Skill radar** | Canvas constellation chart + animated proficiency bars |
-| **Contact form** | Animated success state · `POST /api/contact` |
+| **Contact form** | `POST /api/contact` → email via [Resend](https://resend.com) (see below) |
 | **Performance widget** | Page load timing + live GitHub stats (Insights tab) |
 | **Writing section** | Placeholder structure for blog/notes |
 | **GitHub Pulse bars** | 7-day animated push activity chart |
 | **Parallax & code snippets** | Floating background layers (desktop) |
 | **Konami code** | ↑↑↓↓←→←→BA unlocks acid theme |
+
+## Contact form — where messages go
+
+Submissions are sent to **your Gmail inbox** when `RESEND_API_KEY` is set. There is **no admin panel** on the site and **no Resend Receiving inbox** — Resend only *delivers* the email; you read it in Gmail.
+
+See **[CONTACT_FORM.md](CONTACT_FORM.md)** for the full flow (Send API vs Receiving API, env vars, testing).
+
+| Setup | Where you see messages |
+|-------|-------------------------|
+| **Not configured** | Nowhere useful — server logs only; visitor may get a mailto: fallback |
+| **`RESEND_API_KEY` set** | `CONTACT_TO_EMAIL` inbox (default: `shail020604@gmail.com`) — check **Gmail**, not Resend dashboard |
+| **API fails** | Visitor's email client opens with a pre-filled message to you |
+
+**Resend Receiving** (Python `Emails.Receiving.list()` etc.) is for inbound mail to a **custom domain** in Resend — a different use case. You do **not** need it for this contact form.
+
+### Enable email delivery
+
+1. Sign up at [resend.com](https://resend.com) and create an API key.
+2. Copy `.env.example` → `.env` and set:
+   - `RESEND_API_KEY` — your Resend API key
+   - `CONTACT_TO_EMAIL` — inbox that receives form messages (optional; defaults to Gmail above)
+3. Restart locally (`npm start`) or add the same vars in **Vercel → Project → Settings → Environment Variables**, then redeploy.
+4. Test the contact form — you should receive an email with the visitor's name, reply-to address, and message.
+
+On **Vercel**, you can also inspect failed sends under **Deployments → Functions → `/api/contact` → Logs** (messages are not stored there once email works).
 
 ## Theme & cursor
 
@@ -123,5 +148,5 @@ Or connect GitHub repo at [vercel.com/new](https://vercel.com/new).
 | Platform | URL |
 |----------|-----|
 | GitHub | https://github.com/Shailsharma2604 |
-| LinkedIn | https://in.linkedin.com/in/shail-sharma-607175250 |
+| LinkedIn | https://www.linkedin.com/in/shail2604 |
 | Databricks | https://directory.databrickscertified.com/profile/701279c0-04e0-4025-8ac4-6a8fea31f2d1 |

@@ -1,4 +1,4 @@
-const { getGitHubData } = require('../lib/github-data');
+const { getGitHubData, buildStaticFallback } = require('../lib/github-data');
 
 module.exports = async (_req, res) => {
   try {
@@ -7,14 +7,10 @@ module.exports = async (_req, res) => {
     res.status(200).json(data);
   } catch (err) {
     console.error('GitHub API error:', err.message);
-    const status = err.status === 403 ? 503 : 502;
-    res.status(status).json({
-      error: 'Could not fetch GitHub data',
-      hint: err.status === 403 ? 'rate_limited' : 'upstream_error',
-      message:
-        err.status === 403
-          ? 'Set GITHUB_TOKEN in environment variables for authenticated API access.'
-          : 'GitHub API request failed. Try again shortly.',
-    });
+    const fallback = buildStaticFallback();
+    fallback.error = 'Could not fetch GitHub data';
+    fallback.stale = true;
+    res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=300');
+    res.status(200).json(fallback);
   }
 };

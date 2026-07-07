@@ -1,12 +1,14 @@
 {
   "profileUrl": "https://curin.chitkara.edu.in/patents/",
   "grantedUrl": "https://curin.chitkara.edu.in/patents-granted/",
-  "linkedinProfileUrl": "https://in.linkedin.com/in/shail-sharma-607175250",
+  "linkedinProfileUrl": "https://www.linkedin.com/in/shail2604",
   "university": "Chitkara University",
   "items": [
     {
       "title": "Protective Headgear for Visually Impaired Individuals",
+      "description": "A registered design for protective headgear that helps visually impaired users move more safely in everyday environments. The invention focuses on wearable protection combined with assistive spatial awareness for independent mobility.",
       "applicationNumber": "425479-001",
+      "patentNumber": "DES1610",
       "filedDate": "2024-07-31",
       "grantedDate": "2024-09-20",
       "status": "Granted",
@@ -17,7 +19,9 @@
     },
     {
       "title": "Integrated Touch Screen Phonecase",
+      "description": "A utility patent for a phone case that integrates touch-screen interaction into the protective housing itself. Users can operate the device without removing it from the case, blending everyday consumer convenience with durable protection.",
       "applicationNumber": "404662-001",
+      "patentNumber": "UTI2868",
       "filedDate": "2024-01-17",
       "grantedDate": "2024-08-30",
       "status": "Granted",
@@ -28,7 +32,9 @@
     },
     {
       "title": "Multifunctional Cooling Pad",
+      "description": "A utility patent covering a wearable cooling pad designed for sustained thermal comfort during extended use. The design combines active cooling with multiple comfort-oriented functions suited to health and everyday wearables.",
       "applicationNumber": "404661-001",
+      "patentNumber": "UTI3047",
       "filedDate": "2024-01-17",
       "grantedDate": "2025-03-24",
       "status": "Granted",
@@ -38,52 +44,38 @@
       "featured": true
     },
     {
-      "title": "AI-Driven Dynamic Mobility and Rehabilitation System",
-      "applicationNumber": "202511032393",
-      "filedDate": "2025-04-01",
-      "status": "Filed",
-      "category": "AI · Healthcare",
-      "coInventors": ["Reetu Malhotra", "Pratham Gupta"]
-    },
-    {
       "title": "Wearable Safety Device",
+      "description": "A filed application for a connected wearable that monitors user safety conditions and supports alerts through IoT integration. The device is aimed at personal safety scenarios where timely notification to caregivers or responders matters.",
       "applicationNumber": "202511032395",
       "filedDate": "2025-04-01",
       "status": "Filed",
       "category": "IoT · Safety",
-      "coInventors": ["Reetu Malhotra", "Pratham Gupta"]
+      "coInventors": ["Reetu Malhotra", "Pratham Gupta"],
+      "patentUrl": "https://curin.chitkara.edu.in/patents/wearable-safety-device/"
     },
     {
-      "title": "Sustainable Air Filtration Window",
-      "applicationNumber": "202511032397",
-      "filedDate": "2025-04-01",
-      "status": "Filed",
-      "category": "Sustainability",
-      "coInventors": ["Reetu Malhotra", "Pratham Gupta"]
-    },
-    {
-      "title": "Eco Touch Navigator Glove",
-      "applicationNumber": "202411058219",
-      "filedDate": "2024-07-31",
+      "title": "Sign Language Assisting Glove",
+      "description": "A filed application for a glove-based assistive device that supports sign-language communication accessibility. The invention targets translating hand gestures into readable or spoken output to bridge communication gaps.",
+      "applicationNumber": "202411016194",
+      "portfolioRef": "P636",
+      "universityRef": "UPKHU240104-1931",
+      "filedDate": "2024-03-07",
       "status": "Filed",
       "category": "Assistive Tech",
-      "coInventors": ["Reetu Malhotra", "Vrinda Virmani", "Pratham Gupta", "Gurdyal Singh"]
+      "coInventors": ["Kanika", "Kamal Deep Garg", "Vandana Mohindru Sood", "Pratham Gupta", "Vrinda Virmani"],
+      "patentUrl": "https://curin.chitkara.edu.in/patents/sign-language-assisting-glove/"
     },
     {
-      "title": "Automated Medicine Tracker",
-      "applicationNumber": "425478-001",
-      "filedDate": "2024-07-31",
+      "title": "Cooling Pad with AI-Driven RGB Illumination and Fan Control",
+      "description": "A filed application extending cooling-pad technology with AI-driven RGB lighting and intelligent fan control. The system adapts thermal comfort and visual feedback based on user conditions and preferences.",
+      "applicationNumber": "202411015042",
+      "portfolioRef": "P629",
+      "universityRef": "UPKHU240102-2005",
+      "filedDate": "2024-02-29",
       "status": "Filed",
-      "category": "Healthcare · IoT",
-      "coInventors": ["Reetu Malhotra", "Vrinda Virmani", "Pratham Gupta", "Gurdyal Singh"]
-    },
-    {
-      "title": "Temp-Comfort Shoe",
-      "applicationNumber": "202411058221",
-      "filedDate": "2024-07-31",
-      "status": "Filed",
-      "category": "Wearables",
-      "coInventors": ["Reetu Malhotra", "Vrinda Virmani", "Pratham Gupta", "Gurdyal Singh"]
+      "category": "Consumer Tech",
+      "coInventors": ["Kanika", "Pratham Gupta", "Sonali Saini"],
+      "patentUrl": "https://curin.chitkara.edu.in/patents/cooling-pad-with-ai-driven-rgb-illumination-and-fan-control/"
     }
   ]
 }

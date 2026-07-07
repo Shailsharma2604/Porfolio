@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" data-mode="dark" data-accent="violet">
+<html lang="en" data-mode="dark" data-accent="blue">
 <head>
   <script>
     (function () {
       try {
-        const s = JSON.parse(localStorage.getItem('portfolio-theme') || '{}');
+        const s = JSON.parse(localStorage.getItem('portfolio-theme-v2') || localStorage.getItem('portfolio-theme') || '{}');
+        if (s.accent === 'terracotta') s.accent = 'blue';
         if (s.mode) document.documentElement.dataset.mode = s.mode;
         if (s.accent === 'custom' && s.custom) {
           document.documentElement.dataset.accent = 'custom';
@@ -17,99 +18,149 @@
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#09090f">
+  <meta name="theme-color" content="#0a0f1a">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="description" content="Shail Sharma — Final-year B.E. CSE (AI), Associate Data Engineer at R Systems. Databricks Certified.">
+  <meta name="description" content="Shail Sharma — Associate Data Engineer at R Systems. Databricks Certified. 3 granted patents. Python, Spark, lakehouse pipelines &amp; AI/ML.">
   <meta name="author" content="Shail Sharma">
+  <meta name="keywords" content="Shail Sharma, Data Engineer, Databricks, AI Developer, Python, Spark, lakehouse, patents">
+  <link rel="canonical" href="https://shailsharma2604.vercel.app/">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Shail Sharma Portfolio">
+  <meta property="og:title" content="Shail Sharma | Data Engineer &amp; AI Developer">
+  <meta property="og:description" content="Associate Data Engineer at R Systems. Databricks Certified. 3 granted patents. Python, Spark, lakehouse pipelines &amp; AI/ML.">
+  <meta property="og:url" content="https://shailsharma2604.vercel.app/">
+  <meta property="og:image" content="https://shailsharma2604.vercel.app/assets/og-image.svg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Shail Sharma — Data Engineer &amp; AI Developer">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Shail Sharma | Data Engineer &amp; AI Developer">
+  <meta name="twitter:description" content="Associate Data Engineer at R Systems. Databricks Certified. 3 granted patents. Python, Spark, lakehouse pipelines &amp; AI/ML.">
+  <meta name="twitter:image" content="https://shailsharma2604.vercel.app/assets/og-image.svg">
+  <meta name="twitter:image:alt" content="Shail Sharma — Data Engineer &amp; AI Developer">
   <title>Shail Sharma | Data Engineer &amp; AI Developer</title>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Shail Sharma",
+    "jobTitle": "Associate Data Engineer",
+    "email": "shail020604@gmail.com",
+    "url": "https://shailsharma2604.vercel.app/",
+    "image": "https://shailsharma2604.vercel.app/assets/og-image.svg",
+    "sameAs": [
+      "https://www.linkedin.com/in/shail2604",
+      "https://github.com/Shailsharma2604",
+      "https://directory.databrickscertified.com/profile/701279c0-04e0-4025-8ac4-6a8fea31f2d1",
+      "https://www.kaggle.com/shail2604"
+    ],
+    "alumniOf": {
+      "@type": "CollegeOrUniversity",
+      "name": "Chitkara University"
+    },
+    "worksFor": {
+      "@type": "Organization",
+      "name": "R Systems International"
+    },
+    "knowsAbout": [
+      "Data Engineering",
+      "Apache Spark",
+      "Databricks",
+      "Python",
+      "Machine Learning",
+      "Lakehouse Architecture",
+      "Unity Catalog",
+      "Snowflake",
+      "Artificial Intelligence"
+    ],
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Greater Noida",
+      "addressRegion": "Delhi NCR",
+      "addressCountry": "IN"
+    }
+  }
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-  <noscript><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css" media="print" onload="this.media='all'">
   <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css"></noscript>
-  <link rel="stylesheet" href="css/style.css?v=2">
+  <link rel="stylesheet" href="css/style.css?v=21">
 </head>
 <body>
-  <div class="cursor-spotlight" id="cursorSpotlight" aria-hidden="true"></div>
   <a href="#home" class="skip-link">Skip to content</a>
-  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
-  <div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
-  <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
 
-  <canvas class="bg-particles" id="bgParticles" aria-hidden="true"></canvas>
-  <div class="bg-mesh" aria-hidden="true"></div>
-  <div class="bg-grid" aria-hidden="true"></div>
+  <canvas class="bg-particles" id="bgParticles" aria-hidden="true" hidden></canvas>
+  <div class="bg-aurora" aria-hidden="true">
+    <div class="bg-aurora-band bg-aurora-band--1"></div>
+    <div class="bg-aurora-band bg-aurora-band--2"></div>
+    <div class="bg-aurora-band bg-aurora-band--3"></div>
+  </div>
   <div class="bg-orbs" aria-hidden="true">
     <span class="orb orb-1"></span>
     <span class="orb orb-2"></span>
     <span class="orb orb-3"></span>
   </div>
-  <div class="bg-code-snippets" id="bgCodeSnippets" aria-hidden="true"></div>
+  <div class="bg-stars" aria-hidden="true"></div>
+  <div class="bg-mesh" aria-hidden="true"></div>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-grain" aria-hidden="true"></div>
+  <div class="bg-vignette" aria-hidden="true"></div>
 
-  <nav class="nav" id="nav">
-    <a href="#home" class="nav-logo">
-      <span class="logo-dot"></span>
-      Shail<span class="logo-accent">.</span>
-    </a>
-    <button class="nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false" aria-controls="navLinks">
-      <span></span><span></span><span></span>
-    </button>
-    <ul class="nav-links" id="navLinks">
-      <li><a href="#about">About</a></li>
-      <li><a href="#experience">Work</a></li>
-      <li><a href="#skills">Stack</a></li>
-      <li><a href="#projects">Projects</a></li>
-      <li><a href="#patents">Patents</a></li>
-      <li><a href="#activity">Live</a></li>
-      <li><a href="#writing">Notes</a></li>
-      <li><a href="#certifications">Certs</a></li>
-      <li>
-        <button type="button" class="nav-cmd-btn" id="navCmdBtn" aria-label="Open command palette" title="Search (Ctrl+K)">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+  <nav class="nav" id="nav" aria-label="Main navigation">
+    <div class="nav-bar">
+      <a href="#home" class="nav-logo">
+        <span class="logo-dot"></span>
+        Shail<span class="logo-accent">.</span>
+      </a>
+      <div class="nav-bar-actions">
+        <button type="button" class="nav-mode-btn nav-bar-mode" id="navModeBtn" aria-label="Toggle dark or light mode" title="Toggle dark/light">
+          <svg class="mode-icon-dark" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <svg class="mode-icon-light" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
         </button>
-      </li>
-      <li>
-        <button type="button" class="nav-theme-btn" id="navThemeBtn" aria-label="Open theme settings" title="Theme & colors">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navPanel">
+          <span></span><span></span><span></span>
         </button>
-      </li>
-      <li><a href="#contact" class="nav-cta">Contact</a></li>
-    </ul>
-  </nav>
-
-  <div class="now-strip" id="nowStrip" aria-label="Current status">
-    <div class="container now-strip-inner">
-      <span class="now-dot" aria-hidden="true"></span>
-      <span class="now-focus" id="nowFocus">Associate Data Engineer @ R Systems</span>
-      <span class="now-sep" aria-hidden="true">·</span>
-      <span class="now-open">Open to roles</span>
-      <span class="now-sep" aria-hidden="true">·</span>
-      <time class="now-time" id="nowTime" datetime=""></time>
-    </div>
-  </div>
-
-  <div class="live-ribbon" id="liveRibbon" aria-live="polite">
-    <div class="container live-ribbon-inner">
-      <span class="live-ribbon-pill"><span class="pulse-dot"></span> Live</span>
-      <div class="live-ribbon-track" id="liveRibbonTrack">
-        <span class="live-ribbon-item">Loading live stats…</span>
       </div>
     </div>
-  </div>
+    <div class="nav-backdrop" id="navBackdrop" hidden aria-hidden="true"></div>
+    <div class="nav-panel" id="navPanel" aria-hidden="true">
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#about">About</a></li>
+        <li><a href="#experience">Work</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#patents">Patents</a></li>
+        <li><a href="#activity">Activity</a></li>
+        <li><a href="#writing">Writing</a></li>
+        <li><a href="#certifications">Certs</a></li>
+        <li><a href="#learning">Learning</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+      <div class="nav-footer">
+        <button type="button" class="nav-cmd-btn nav-cmd-wide" id="navCmdBtn" aria-label="Command palette" title="Command palette (Ctrl+K)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <span class="nav-cmd-label">Search &amp; shortcuts</span>
+        </button>
+        <a href="#contact" class="nav-cta">Contact</a>
+      </div>
+    </div>
+  </nav>
 
   <header class="hero" id="home">
     <div class="container hero-layout">
       <div class="hero-text">
         <div class="hero-eyebrow">
           <span class="pulse-dot"></span>
-          Available for opportunities · Final year B.E.
+          <span class="otw-badge">Open to work</span>
+          Available for full-time roles · Final year B.E.
         </div>
         <h1 class="hero-name" id="heroName">
           <span class="line">Shail</span>
-          <span class="line gradient-text scramble-text" id="heroNameScramble" title="Double-click to scramble">Sharma</span>
+          <span class="line gradient-text">Sharma</span>
         </h1>
         <p class="hero-title">Associate Data Engineer <span class="sep">·</span> AI &amp; ML Developer</p>
         <p class="hero-tagline">
@@ -121,28 +172,35 @@
           <span class="live-clock" id="liveClock"></span>
         </div>
         <div class="hero-badges">
-          <span class="badge badge-gold" id="heroGrantedBadge"><span class="badge-icon">🏅</span> <span id="heroGrantedText">3 Patents Granted</span></span>
-          <span class="badge badge-glow"><span class="badge-icon">◆</span> Databricks Certified</span>
-          <span class="badge">R Systems International</span>
-          <span class="badge">Final Year · B.E.</span>
-          <span class="badge">Delhi NCR</span>
+          <div class="hero-badges-row hero-badges-featured">
+            <span class="badge badge-gold" id="heroGrantedBadge"><span class="badge-icon">🏅</span> <span id="heroGrantedText">3 Patents Granted</span></span>
+            <span class="badge badge-glow"><span class="badge-icon">◆</span> Databricks Certified</span>
+          </div>
         </div>
         <div class="hero-actions">
-          <a href="#projects" class="btn btn-primary btn-magnetic">
-            <span>View Projects</span>
+          <a href="#projects" class="btn btn-primary">
+            <span>View my projects</span>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
-          <a href="assets/resume.pdf" class="btn btn-glass" download="Shail_Sharma_Resume.pdf" target="_blank" rel="noopener">Resume</a>
-          <a href="tel:+918288851361" class="btn btn-glass">+91 82888 51361</a>
+          <a href="#contact" class="btn btn-outline">Contact me</a>
+          <a href="https://www.linkedin.com/in/shail2604" target="_blank" rel="noopener" class="btn btn-linkedin">
+            <span class="linkedin-logo">in</span>
+            Connect on LinkedIn
+          </a>
+          <button type="button" class="btn btn-outline" id="sharePortfolioHero" title="Copy link or share on LinkedIn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+            Share
+          </button>
+          <a href="#about" class="btn btn-outline" data-resume-link>View resume summary</a>
         </div>
       </div>
 
       <div class="hero-visual parallax-layer">
-        <div class="avatar-ring">
+        <div class="avatar-ring" id="heroAvatarRing">
           <img
             id="heroAvatar"
-            src="https://github.com/Shailsharma2604.png?size=400"
-            alt="Shail Sharma — profile photo"
+            src="/api/linkedin-photo/image"
+            alt="Shail Sharma — profile photo from LinkedIn"
             class="hero-avatar"
             width="240"
             height="240"
@@ -164,7 +222,7 @@
             <span class="metric-label">Total IP</span>
           </div>
           <div class="metric-card metric-accent tilt-card">
-            <span class="metric-num" id="heroFollowerCount" data-count="8">—</span>
+            <span class="metric-num" id="heroFollowerCount" data-count="10">—</span>
             <span class="metric-label">Followers</span>
           </div>
           <div class="metric-card tilt-card">
@@ -176,30 +234,68 @@
     </div>
   </header>
 
-  <div class="marquee-wrap">
-    <div class="marquee" aria-hidden="true">
-      <div class="marquee-inner">
-        <span><i class="devicon-python-plain colored"></i>Python</span>
-        <span><i class="devicon-databricks-plain colored"></i>Databricks</span>
-        <span><i class="devicon-apachespark-original colored"></i>Spark</span>
-        <span><i class="devicon-snowflake-plain colored"></i>Snowflake</span>
-        <span><i class="devicon-tensorflow-original colored"></i>TensorFlow</span>
-        <span><i class="devicon-react-original colored"></i>React</span>
-        <span><i class="devicon-azure-plain colored"></i>Azure</span>
-        <span><i class="devicon-python-plain colored"></i>Python</span>
-        <span><i class="devicon-databricks-plain colored"></i>Databricks</span>
-        <span><i class="devicon-apachespark-original colored"></i>Spark</span>
-        <span><i class="devicon-snowflake-plain colored"></i>Snowflake</span>
-        <span><i class="devicon-tensorflow-original colored"></i>TensorFlow</span>
-        <span><i class="devicon-react-original colored"></i>React</span>
-        <span><i class="devicon-azure-plain colored"></i>Azure</span>
+  <section class="highlights-strip" aria-label="Career highlights">
+    <div class="highlights-marquee" aria-hidden="true">
+      <div class="highlights-track">
+        <span class="highlight-item"><em>3</em> Granted Patents</span>
+        <span class="highlight-sep">·</span>
+        <span class="highlight-item">Databricks Certified</span>
+        <span class="highlight-sep">·</span>
+        <span class="highlight-item"><em>51+</em> GitHub Repos</span>
+        <span class="highlight-sep">·</span>
+        <span class="highlight-item">Associate Data Engineer @ R Systems</span>
+        <span class="highlight-sep">·</span>
+        <span class="highlight-item">Smart India Hackathon</span>
+        <span class="highlight-sep">·</span>
+        <span class="highlight-item"><em>3</em> Granted Patents</span>
+        <span class="highlight-sep">·</span>
+        <span class="highlight-item">Databricks Certified</span>
+        <span class="highlight-sep">·</span>
+        <span class="highlight-item"><em>51+</em> GitHub Repos</span>
+        <span class="highlight-sep">·</span>
+        <span class="highlight-item">Associate Data Engineer @ R Systems</span>
+        <span class="highlight-sep">·</span>
+        <span class="highlight-item">Smart India Hackathon</span>
       </div>
     </div>
-  </div>
+  </section>
+
+  <section class="achievements-bar" aria-label="Key achievements">
+    <div class="container achievements-bar-inner">
+      <a href="#experience" class="achievement-pill">
+        <span class="achievement-icon" aria-hidden="true">★</span>
+        <span class="achievement-text"><strong>Smart India Hackathon</strong><span>Vizieye · Team Lead</span></span>
+      </a>
+      <a href="#patents" class="achievement-pill">
+        <span class="achievement-icon" aria-hidden="true">🏅</span>
+        <span class="achievement-text"><strong>3 Granted Patents</strong><span>CURIN · Chitkara University</span></span>
+      </a>
+      <a href="#certifications" class="achievement-pill">
+        <span class="achievement-icon achievement-icon-db" aria-hidden="true">◆</span>
+        <span class="achievement-text"><strong>Databricks Certified</strong><span>Data Engineer Associate · 2026</span></span>
+      </a>
+      <a href="#experience" class="achievement-pill">
+        <span class="achievement-icon" aria-hidden="true">◈</span>
+        <span class="achievement-text"><strong>R Systems</strong><span>Associate Data Engineer</span></span>
+      </a>
+    </div>
+  </section>
 
   <div class="commit-ticker-wrap" id="commitTickerWrap" hidden>
     <div class="commit-ticker" id="commitTicker" aria-hidden="true"></div>
   </div>
+
+  <section class="stats-snapshot-section reveal" id="statsSnapshotSection" aria-label="Quick stats">
+    <div class="container">
+      <div class="stats-snapshot-head">
+        <span class="section-tag">At a glance</span>
+        <h2 class="stats-snapshot-title">Quick <span class="gradient-text">snapshot</span></h2>
+      </div>
+      <div class="stats-snapshot-grid reveal-stagger" id="statsSnapshot"></div>
+    </div>
+  </section>
+
+  <nav class="section-dots" id="sectionDots" aria-label="Jump to section"></nav>
 
   <main>
     <section class="section" id="about">
@@ -208,55 +304,134 @@
           <span class="section-tag">01 — About</span>
           <h2 class="section-title">Building at the intersection of <span class="gradient-text">data &amp; AI</span></h2>
         </header>
-        <div class="about-bento">
-          <article class="glass-card about-main">
-            <p>
-              <strong>Final-year B.E. CSE (AI)</strong> student at Chitkara University and <strong>Associate Data Engineer</strong>
-              at R Systems International — I turn complex ideas into scalable pipelines and intelligent products.
+
+        <div class="about-magazine">
+          <article class="about-narrative">
+            <p class="about-lede">
+              <strong>Final-year B.E. CSE (AI)</strong> student at Chitkara University and
+              <strong>Associate Data Engineer</strong> at R Systems International — I turn complex ideas
+              into scalable pipelines and intelligent products.
             </p>
-            <p>
-              Co-inventor on <strong>3 granted patents</strong> and multiple filed applications at Chitkara University —
-              from assistive headgear to consumer tech. Innovation meets engineering in everything I build.
-            </p>
-            <p>
-              From hackathon builds like <em>Scriptscan</em> and <em>Vizieye</em> to enterprise lakehouse work
-              with Databricks, Snowflake, and Unity Catalog — I'm always shipping and learning.
-            </p>
-            <p>
-              UI/UX experience at Conceptou &amp; Accerovic sharpened my product sense. I compete in
-              <strong>Smart India Hackathon</strong> and <strong>H.T.M. 5.0</strong>.
-            </p>
+
+            <div class="about-stat-row">
+              <div class="about-stat glass-card">
+                <span class="about-stat-num">3</span>
+                <span class="about-stat-label">Patents granted</span>
+              </div>
+              <div class="about-stat glass-card">
+                <span class="about-stat-num">6</span>
+                <span class="about-stat-label">Total IP filings</span>
+              </div>
+            </div>
+
+            <figure class="about-pullquote glass-card">
+              <blockquote cite="#patents">
+                <p>Co-inventor on <strong>3 granted patents</strong> and multiple filed applications at Chitkara University — from assistive headgear to consumer tech. Innovation meets engineering in everything I build.</p>
+              </blockquote>
+              <figcaption class="about-patent-teaser" id="aboutPatentTeaser" aria-label="Granted inventions">
+                <ul class="about-patent-highlights">
+                  <li><strong>Protective Headgear for Visually Impaired Individuals</strong> <span class="about-patent-ref">DES1610</span></li>
+                  <li><strong>Integrated Touch Screen Phonecase</strong> <span class="about-patent-ref">UTI2868</span></li>
+                  <li><strong>Multifunctional Cooling Pad</strong> <span class="about-patent-ref">UTI3047</span></li>
+                </ul>
+                <a href="#patents" class="about-patent-cta">View all patents &amp; filings →</a>
+              </figcaption>
+            </figure>
+
+            <div class="about-body">
+              <p>
+                From hackathon builds like <em>Scriptscan</em> and <em>Vizieye</em> to enterprise lakehouse work
+                with Databricks, Snowflake, and Unity Catalog — I'm always shipping and learning.
+              </p>
+              <p>
+                I compete in <strong>Smart India Hackathon</strong> and <strong>H.T.M. 5.0</strong>,
+                blending research rigor with product-minded engineering.
+              </p>
+            </div>
+
+            <div class="about-tile about-tile-role glass-card">
+              <span class="about-tile-kicker">Current role</span>
+              <p class="about-tile-title">Associate Data Engineer · R Systems International</p>
+              <p class="about-tile-sub">B.E. Computer Science (AI) · Chitkara University · May 2026</p>
+            </div>
           </article>
-          <aside class="glass-card about-sidebar">
-            <div class="info-row">
-              <span class="info-label">Role</span>
-              <span class="info-value">Data Engineer</span>
+
+          <aside class="about-aside" aria-label="Credentials and resume">
+            <div class="about-tile about-tile-cert glass-card">
+              <span class="about-tile-badge">Certified · 2026</span>
+              <p class="about-tile-cert-name" id="aboutCertName">Databricks Certified Data Engineer Associate</p>
+              <a href="https://credentials.databricks.com/26a22197-b2ed-4002-80a2-dae3b4abb0d8" target="_blank" rel="noopener" class="about-cert-verify btn btn-glass btn-sm" id="aboutCertVerify">Verify on Databricks ↗</a>
             </div>
-            <div class="info-row">
-              <span class="info-label">Company</span>
-              <span class="info-value">R Systems</span>
+
+            <div class="about-tile about-tile-stack glass-card">
+              <span class="about-tile-kicker">Ship with</span>
+              <p class="about-tile-stack-line">Production lakehouse pipelines · Spark · Unity Catalog · Snowflake</p>
+              <div class="about-chip-row" aria-label="Core stack">
+                <span class="about-chip">Data Engineering</span>
+                <span class="about-chip">Databricks</span>
+                <span class="about-chip">Python</span>
+                <span class="about-chip">Apache Spark</span>
+                <span class="about-chip">AI/ML</span>
+                <span class="about-chip">SQL</span>
+              </div>
+              <a href="https://github.com/Shailsharma2604" class="about-github-link" target="_blank" rel="noopener noreferrer">GitHub @Shailsharma2604 · Python · AI/ML · ETL ↗</a>
             </div>
-            <div class="info-row">
-              <span class="info-label">Education</span>
-              <span class="info-value">B.E. CSE (AI) · Final Year</span>
+
+            <div class="about-tile about-tile-linkedin glass-card" id="aboutLinkedInTile">
+              <span class="about-tile-kicker">Professional network</span>
+              <div class="about-li-row">
+                <img class="about-li-photo" src="https://unavatar.io/linkedin/shail2604" alt="Shail Sharma on LinkedIn" width="48" height="48" loading="lazy" decoding="async"
+                  onerror="this.onerror=null;this.src='https://github.com/Shailsharma2604.png?size=96'">
+                <div>
+                  <p class="about-tile-title" id="aboutLinkedInName">Shail Sharma</p>
+                  <p class="about-tile-sub" id="aboutLinkedInHeadline">Associate Data Engineer @ R Systems International | AI/ML Enthusiast | Python • Machine Learning • Deep Learning</p>
+                </div>
+              </div>
+              <a href="https://www.linkedin.com/in/shail2604" target="_blank" rel="noopener" class="btn btn-linkedin btn-sm">Connect on LinkedIn ↗</a>
             </div>
-            <div class="info-row">
-              <span class="info-label">Location</span>
-              <span class="info-value">Delhi NCR</span>
-            </div>
-            <div class="info-row">
-              <span class="info-label">Phone</span>
-              <a href="tel:+918288851361" class="info-value info-link">+91 82888 51361</a>
-            </div>
-            <a href="mailto:shail020604@gmail.com" class="info-email">shail020604@gmail.com</a>
+
+            <div class="about-tile about-tile-resume glass-card" id="resumePreview" aria-label="Resume preview"></div>
           </aside>
         </div>
+
+        <footer class="about-contact-strip glass-card" aria-label="Contact details">
+          <dl class="about-contact-grid" id="aboutContactGrid">
+            <div class="about-contact-item">
+              <dt>Role</dt>
+              <dd id="aboutContactRole">Associate Data Engineer</dd>
+            </div>
+            <div class="about-contact-item">
+              <dt>Company</dt>
+              <dd id="aboutContactCompany">R Systems International</dd>
+            </div>
+            <div class="about-contact-item">
+              <dt>Education</dt>
+              <dd id="aboutContactEducation">B.E. CSE (AI) · Final Year</dd>
+            </div>
+            <div class="about-contact-item">
+              <dt>Location</dt>
+              <dd id="aboutContactLocation">Delhi NCR</dd>
+            </div>
+            <div class="about-contact-item">
+              <dt>Phone</dt>
+              <dd id="aboutContactPhone"><a href="tel:+918288851361">+91 82888 51361</a></dd>
+            </div>
+            <div class="about-contact-item about-contact-email">
+              <dt>Email</dt>
+              <dd id="aboutContactEmail"><a href="mailto:shail020604@gmail.com">shail020604@gmail.com</a></dd>
+            </div>
+            <div class="about-contact-item about-contact-linkedin">
+              <dt>LinkedIn</dt>
+              <dd id="aboutContactLinkedIn"><a href="https://www.linkedin.com/in/shail2604" target="_blank" rel="noopener">in/shail2604 ↗</a></dd>
+            </div>
+          </dl>
+        </footer>
       </div>
     </section>
 
     <div class="section-divider" aria-hidden="true"><span class="section-divider-line"></span></div>
 
-    <section class="section devshell-section" id="devshell">
+    <section class="section devshell-section" id="devshell" hidden aria-hidden="true">
       <div class="container">
         <header class="section-head">
           <span class="section-tag">— Dev Shell</span>
@@ -282,62 +457,50 @@
           <span class="section-tag">02 — Experience</span>
           <h2 class="section-title">Where I've <span class="gradient-text">worked &amp; learned</span></h2>
         </header>
-        <div class="exp-timeline">
+        <div class="exp-timeline exp-timeline-vertical">
           <div class="exp-rail" aria-hidden="true"></div>
-          <div class="exp-grid" id="expGrid">
-          <article class="glass-card exp-card exp-featured exp-expandable" tabindex="0">
-            <div class="exp-top">
-              <span class="exp-badge exp-live">Current</span>
-              <span class="exp-date">Oct 2025 — Present</span>
-            </div>
-            <h3>Associate Data Engineer</h3>
-            <p class="exp-org">R Systems International</p>
-            <p class="exp-desc">Data pipelines, analytics platforms, and scalable ETL. Deep focus on Databricks, Snowflake, Unity Catalog, and production-grade patterns.</p>
-            <div class="exp-extra">
-              <p>Building production lakehouse pipelines, GenAI upskilling initiatives, and scalable analytics for enterprise clients.</p>
-            </div>
-            <div class="exp-tags">
-              <span>Databricks</span><span>Spark</span><span>ETL</span>
-            </div>
-            <span class="exp-expand-hint">Click to expand ↓</span>
-          </article>
-          <article class="glass-card exp-card exp-expandable" tabindex="0">
-            <div class="exp-top">
-              <span class="exp-badge">Internship</span>
-              <span class="exp-date">2023 — 2024</span>
-            </div>
-            <h3>UI/UX &amp; Digital Marketing</h3>
-            <p class="exp-org">Conceptou · Accerovic</p>
-            <p class="exp-desc">Brand visibility, user engagement, and product design across digital channels.</p>
-            <div class="exp-extra">
-              <p>Led UI/UX design workflows, content strategy, and digital campaigns that improved brand reach and user engagement.</p>
-            </div>
-            <span class="exp-expand-hint">Click to expand ↓</span>
-          </article>
-          <article class="glass-card exp-card exp-expandable" tabindex="0">
-            <div class="exp-top">
-              <span class="exp-badge">Education</span>
-              <span class="exp-date">2022 — 2026</span>
-            </div>
-            <h3>B.E. CSE (Artificial Intelligence)</h3>
-            <p class="exp-org">Chitkara University · Final Year</p>
-            <p class="exp-desc">Final-year undergraduate in CSE (AI) — Python, Java, C++, AI/ML, and active hackathon &amp; open-source work.</p>
-            <div class="exp-extra">
-              <p>Smart India Hackathon · H.T.M. 5.0 · 3 granted patents · active CURIN research &amp; innovation work.</p>
-            </div>
-            <span class="exp-expand-hint">Click to expand ↓</span>
-          </article>
-          </div>
+          <div class="exp-grid" id="expGrid" aria-live="polite"></div>
         </div>
       </div>
     </section>
+
+    <section class="section section-milestones" id="milestones">
+      <div class="container">
+        <header class="section-head">
+          <span class="section-tag">Highlights</span>
+          <h2 class="section-title">Career <span class="gradient-text">milestones</span></h2>
+          <p class="section-sub">Key moments — from university research to enterprise data engineering.</p>
+        </header>
+        <div class="milestones-track reveal-stagger" id="milestonesTrack"></div>
+      </div>
+    </section>
+
+    <div class="section-divider" aria-hidden="true"><span class="section-divider-line"></span></div>
 
     <section class="section" id="skills">
       <div class="container">
         <header class="section-head">
           <span class="section-tag">03 — Skills</span>
-          <h2 class="section-title">Technologies I <span class="gradient-text">work with</span></h2>
+          <h2 class="section-title">Technologies I <span class="accent-text">work with</span></h2>
         </header>
+        <div class="tech-marquee-wrap" aria-hidden="true">
+          <div class="tech-marquee">
+            <span><i class="devicon-python-plain colored"></i>Python</span>
+            <span><i class="devicon-databricks-plain colored"></i>Databricks</span>
+            <span><i class="devicon-apachespark-original colored"></i>Spark</span>
+            <span><i class="devicon-snowflake-plain colored"></i>Snowflake</span>
+            <span><i class="devicon-tensorflow-original colored"></i>TensorFlow</span>
+            <span><i class="devicon-react-original colored"></i>React</span>
+            <span><i class="devicon-azure-plain colored"></i>Azure</span>
+            <span><i class="devicon-python-plain colored"></i>Python</span>
+            <span><i class="devicon-databricks-plain colored"></i>Databricks</span>
+            <span><i class="devicon-apachespark-original colored"></i>Spark</span>
+            <span><i class="devicon-snowflake-plain colored"></i>Snowflake</span>
+            <span><i class="devicon-tensorflow-original colored"></i>TensorFlow</span>
+            <span><i class="devicon-react-original colored"></i>React</span>
+            <span><i class="devicon-azure-plain colored"></i>Azure</span>
+          </div>
+        </div>
         <div class="stack-bento">
           <div class="glass-card stack-block stack-wide">
             <h3><i class="devicon-apachespark-original colored"></i> Data Engineering</h3>
@@ -404,7 +567,7 @@
             <div class="skill-meter" data-skill="React &amp; Web" data-level="78" data-tip="Dashboards, portfolios, Streamlit/Flask"><span class="skill-meter-label">Web</span><div class="skill-meter-track"><div class="skill-meter-fill"></div></div><span class="skill-meter-pct">—</span></div>
             <div class="skill-meter" data-skill="Cloud (Azure)" data-level="75" data-tip="Azure data services &amp; deployment"><span class="skill-meter-label">Azure</span><div class="skill-meter-track"><div class="skill-meter-fill"></div></div><span class="skill-meter-pct">—</span></div>
           </div>
-          <p class="skill-meter-tip" id="skillMeterTip">Hover a skill to see context</p>
+          <p class="skill-meter-tip" id="skillMeterTip">Tap a skill bar for details</p>
         </div>
         </div>
       </div>
@@ -419,12 +582,18 @@
           <h2 class="section-title">Selected <span class="gradient-text">work</span></h2>
           <p class="section-sub">From <a href="https://github.com/Shailsharma2604" target="_blank" rel="noopener">GitHub</a> and personal experiments.</p>
         </header>
-        <div class="project-filters" id="projectFilters" role="tablist">
-          <button type="button" class="project-filter active" data-filter="all">All</button>
-          <button type="button" class="project-filter" data-filter="data">Data</button>
-          <button type="button" class="project-filter" data-filter="ai">AI / ML</button>
-          <button type="button" class="project-filter" data-filter="web">Web</button>
-          <button type="button" class="project-filter" data-filter="hackathon">Hackathon</button>
+        <div class="project-toolbar">
+          <div class="project-filters" id="projectFilters" role="tablist">
+            <button type="button" class="project-filter active" data-filter="all">All</button>
+            <button type="button" class="project-filter" data-filter="data">Data</button>
+            <button type="button" class="project-filter" data-filter="ai">AI / ML</button>
+            <button type="button" class="project-filter" data-filter="web">Web</button>
+            <button type="button" class="project-filter" data-filter="hackathon">Hackathon</button>
+          </div>
+          <label class="project-search-wrap">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input type="search" id="projectSearch" class="project-search" placeholder="Search projects…" autocomplete="off" spellcheck="false" aria-label="Search projects">
+          </label>
         </div>
         <div class="project-carousel-wrap glass-card" id="projectCarousel">
           <div class="carousel-head">
@@ -441,9 +610,10 @@
           <div class="carousel-dots" id="carouselDots" role="tablist"></div>
         </div>
         <div class="projects-masonry" id="projectsGrid">
-          <article class="glass-card project-card project-hero tilt-card" data-tags="hackathon data web" data-github="https://github.com/Shailsharma2604/Vizieye" tabindex="0" role="button" aria-label="View Vizieye details">
+          <article class="surface-card project-card project-hero tilt-card" data-tags="hackathon data web" data-github="https://github.com/Shailsharma2604/Vizieye" data-case-study="vizieye">
             <div class="project-top">
               <span class="project-id">01</span>
+              <span class="project-expand-hint">Click for details</span>
               <a href="https://github.com/Shailsharma2604/Vizieye" target="_blank" rel="noopener" class="project-link" onclick="event.stopPropagation()">↗ GitHub</a>
             </div>
             <h3>Vizieye</h3>
@@ -451,23 +621,33 @@
             <div class="project-chips"><span>Python</span><span>Data Viz</span><span>Hackathon</span></div>
           </article>
 
-          <article class="glass-card project-card tilt-card" data-tags="ai" tabindex="0" role="button" aria-label="View IntelleX details">
-            <div class="project-top"><span class="project-id">02</span></div>
+          <article class="surface-card project-card project-featured-work tilt-card" data-tags="data" data-case-study="lakehouse">
+            <div class="project-top">
+              <span class="project-id">02</span>
+              <span class="project-expand-hint">Click for case study</span>
+            </div>
+            <h3>Production Lakehouse Pipelines</h3>
+            <p>Enterprise lakehouse architecture at R Systems — Databricks, Delta Live Tables, Unity Catalog &amp; Snowflake integration.</p>
+            <div class="project-chips"><span>Databricks</span><span>Spark</span><span>ETL</span><span>Unity Catalog</span></div>
+          </article>
+
+          <article class="glass-card project-card tilt-card" data-tags="ai">
+            <div class="project-top"><span class="project-id">03</span></div>
             <h3>IntelleX</h3>
             <p>AI assistant with voice &amp; gesture control for system-level automation.</p>
             <div class="project-chips"><span>Python</span><span>AI</span><span>CV</span></div>
           </article>
 
-          <article class="glass-card project-card tilt-card" data-tags="ai" tabindex="0" role="button" aria-label="View POC Planning Agent details">
-            <div class="project-top"><span class="project-id">03</span></div>
+          <article class="glass-card project-card tilt-card" data-tags="ai">
+            <div class="project-top"><span class="project-id">04</span></div>
             <h3>POC Planning Agent</h3>
             <p>6-agent LLM pipeline generating architecture, APIs, data models &amp; RAG docs.</p>
             <div class="project-chips"><span>OpenAI</span><span>Streamlit</span><span>RAG</span></div>
           </article>
 
-          <article class="glass-card project-card tilt-card" data-tags="web ai" data-github="https://github.com/Shailsharma2604/Paper-Vision-Augmented-Reality" tabindex="0" role="button" aria-label="View Paper Vision AR details">
+          <article class="glass-card project-card tilt-card" data-tags="web ai" data-github="https://github.com/Shailsharma2604/Paper-Vision-Augmented-Reality">
             <div class="project-top">
-              <span class="project-id">04</span>
+              <span class="project-id">05</span>
               <a href="https://github.com/Shailsharma2604/Paper-Vision-Augmented-Reality" target="_blank" rel="noopener" class="project-link" onclick="event.stopPropagation()">↗</a>
             </div>
             <h3>Paper Vision AR</h3>
@@ -475,9 +655,9 @@
             <div class="project-chips"><span>AR</span><span>Web</span></div>
           </article>
 
-          <article class="glass-card project-card tilt-card" data-tags="ai data" data-github="https://github.com/Shailsharma2604/TrendPredict" tabindex="0" role="button" aria-label="View TrendPredict details">
+          <article class="glass-card project-card tilt-card" data-tags="ai data" data-github="https://github.com/Shailsharma2604/TrendPredict">
             <div class="project-top">
-              <span class="project-id">05</span>
+              <span class="project-id">06</span>
               <a href="https://github.com/Shailsharma2604/TrendPredict" target="_blank" rel="noopener" class="project-link" onclick="event.stopPropagation()">↗</a>
             </div>
             <h3>TrendPredict</h3>
@@ -485,9 +665,9 @@
             <div class="project-chips"><span>ML</span><span>Analytics</span></div>
           </article>
 
-          <article class="glass-card project-card tilt-card" data-tags="web data ai" data-github="https://github.com/Shailsharma2604/Stock-web-oracle" tabindex="0" role="button" aria-label="View Stock Web Oracle details">
+          <article class="glass-card project-card tilt-card" data-tags="web data ai" data-github="https://github.com/Shailsharma2604/Stock-web-oracle">
             <div class="project-top">
-              <span class="project-id">06</span>
+              <span class="project-id">07</span>
               <a href="https://github.com/Shailsharma2604/Stock-web-oracle" target="_blank" rel="noopener" class="project-link" onclick="event.stopPropagation()">↗</a>
             </div>
             <h3>Stock Web Oracle</h3>
@@ -495,9 +675,9 @@
             <div class="project-chips"><span>Finance</span><span>Web</span></div>
           </article>
 
-          <article class="glass-card project-card tilt-card" data-tags="web" data-github="https://github.com/Shailsharma2604/sudoko-game-and-solver" tabindex="0" role="button" aria-label="View Sudoku Solver details">
+          <article class="glass-card project-card tilt-card" data-tags="web" data-github="https://github.com/Shailsharma2604/sudoko-game-and-solver">
             <div class="project-top">
-              <span class="project-id">07</span>
+              <span class="project-id">08</span>
               <a href="https://github.com/Shailsharma2604/sudoko-game-and-solver" target="_blank" rel="noopener" class="project-link" onclick="event.stopPropagation()">↗</a>
             </div>
             <h3>Sudoku Solver</h3>
@@ -511,6 +691,7 @@
             <a href="https://github.com/Shailsharma2604?tab=repositories" target="_blank" rel="noopener" class="btn btn-primary btn-sm">View GitHub →</a>
           </article>
         </div>
+        <p class="projects-empty" id="projectsEmpty" hidden>No projects match your search. Try another keyword or filter.</p>
       </div>
     </section>
 
@@ -520,16 +701,20 @@
           <div>
             <span class="section-tag">05 — Patents &amp; Innovation</span>
             <h2 class="section-title">Intellectual property &amp; <span class="gradient-text">research</span></h2>
-            <p class="section-sub">Co-inventor on <strong id="patentSubGranted">3 granted</strong> &amp; <strong id="patentSubFiled">6 filed</strong> patents at Chitkara University · verified on <a href="https://in.linkedin.com/in/shail-sharma-607175250" target="_blank" rel="noopener">LinkedIn</a></p>
+            <p class="section-sub">Co-inventor on <strong id="patentSubGranted">3 granted</strong> &amp; <strong id="patentSubFiled">3 filed</strong> patents at Chitkara University · verified on <a href="https://www.linkedin.com/in/shail2604" target="_blank" rel="noopener">LinkedIn</a></p>
           </div>
           <div class="patent-summary-stack">
             <div class="patent-summary-card glass-card patent-summary-granted">
               <span class="patent-summary-num" id="patentGrantedBadge">—</span>
               <span class="patent-summary-label">Granted</span>
             </div>
-            <div class="patent-summary-card glass-card">
+            <div class="patent-summary-card glass-card patent-summary-filed">
+              <span class="patent-summary-num" id="patentFiledBadge">—</span>
+              <span class="patent-summary-label">Filed</span>
+            </div>
+            <div class="patent-summary-card glass-card patent-summary-total">
               <span class="patent-summary-num" id="patentCountBadge">—</span>
-              <span class="patent-summary-label">Total patents</span>
+              <span class="patent-summary-label">Total IP</span>
               <a href="https://curin.chitkara.edu.in/patents-granted/" target="_blank" rel="noopener" class="btn btn-glass btn-sm">Granted registry ↗</a>
             </div>
           </div>
@@ -549,8 +734,8 @@
     <section class="section" id="activity">
       <div class="container">
         <header class="section-head">
-          <span class="section-tag">06 — Live Dashboard</span>
-          <h2 class="section-title">Real-time <span class="gradient-text">insights</span></h2>
+          <span class="section-tag">06 — Activity</span>
+          <h2 class="section-title">GitHub &amp; <span class="gradient-text">social activity</span></h2>
           <p class="section-sub live-sub-row">
             <span class="live-pill"><span class="pulse-dot"></span> Live</span>
             <span id="statsUpdated" class="stats-updated"></span>
@@ -558,6 +743,8 @@
             <button type="button" class="btn btn-glass btn-sm" id="refreshLiveBtn">Refresh now</button>
           </p>
         </header>
+
+        <aside class="linkedin-showcase glass-card" id="linkedinShowcase" aria-label="LinkedIn profile"></aside>
 
         <div class="live-tabs" role="tablist">
           <button type="button" class="live-tab active" data-tab="github" role="tab">GitHub</button>
@@ -579,10 +766,11 @@
             <div id="githubPulse" class="github-pulse" aria-label="GitHub activity pulse"></div>
             <div class="contrib-wrap pop-in">
               <img
-                src="https://github-readme-activity-graph.vercel.app/graph?username=Shailsharma2604&theme=react&hide_border=true&area=true&bg_color=00000000&color=8b5cf6&line=22d3ee&point=f472b6"
+                src="https://github-readme-activity-graph.vercel.app/graph?username=Shailsharma2604&theme=react&hide_border=true&area=true&bg_color=00000000&color=2563eb&line=0ea5e9&point=60a5fa"
                 alt="GitHub contribution graph"
                 class="contrib-graph"
                 loading="lazy"
+                data-embed-fallback="Contribution graph unavailable — view activity on GitHub"
               >
             </div>
             <h4 class="activity-subhead">Latest commits</h4>
@@ -603,9 +791,22 @@
                   <h3>LinkedIn</h3>
                   <p>Profile &amp; latest updates</p>
                 </div>
-                <a href="https://in.linkedin.com/in/shail-sharma-607175250" target="_blank" rel="noopener" class="panel-link">Profile ↗</a>
+                <a href="https://www.linkedin.com/in/shail2604" target="_blank" rel="noopener" class="panel-link">Profile ↗</a>
               </div>
-              <div id="linkedinContent" class="linkedin-content"></div>
+              <div id="linkedinContent" class="linkedin-content">
+                <div class="linkedin-stack linkedin-static-fallback">
+                  <div class="linkedin-granted-banner">
+                    <span class="linkedin-granted-icon">🏅</span>
+                    <div>
+                      <strong>3 Granted Patents</strong>
+                      <p>Verified on LinkedIn profile</p>
+                    </div>
+                    <a href="https://www.linkedin.com/in/shail2604" target="_blank" rel="noopener" class="btn btn-primary btn-sm btn-linkedin">
+                      <span class="linkedin-logo">in</span> Connect
+                    </a>
+                  </div>
+                </div>
+              </div>
             </article>
             <article class="glass-card activity-panel holopin-panel">
               <div class="panel-head">
@@ -645,30 +846,7 @@
               </div>
               <div id="languageBars" class="language-bars"></div>
             </article>
-            <article class="glass-card activity-panel">
-              <div class="panel-head">
-                <span class="panel-icon-insight">🔗</span>
-                <div>
-                  <h3>Profiles &amp; IDs</h3>
-                  <p>Quick links from live config</p>
-                </div>
-              </div>
-              <div id="profileLinksLive" class="profile-links-live"></div>
-            </article>
-            <article class="glass-card activity-panel insights-wide">
-              <div class="panel-head">
-                <span class="panel-icon-insight">📈</span>
-                <div>
-                  <h3>GitHub Streak &amp; Stats</h3>
-                  <p>Live contribution metrics</p>
-                </div>
-              </div>
-              <div class="github-stats-embed">
-                <img src="https://github-readme-stats.vercel.app/api?username=Shailsharma2604&show_icons=true&theme=transparent&hide_border=true&title_color=8b5cf6&icon_color=22d3ee&text_color=e4e8f0" alt="GitHub stats" loading="lazy" class="stats-img">
-                <img src="https://github-readme-streak-stats.herokuapp.com/?user=Shailsharma2604&theme=transparent&hide_border=true&stroke=8b5cf6&ring=22d3ee&fire=f472b6&currStreakLabel=8b5cf6" alt="GitHub streak" loading="lazy" class="stats-img">
-              </div>
-            </article>
-            <article class="glass-card activity-panel" id="perfWidget">
+            <article class="glass-card activity-panel insights-perf-panel" id="perfWidget">
               <div class="panel-head">
                 <span class="panel-icon-insight">⚡</span>
                 <div>
@@ -678,6 +856,28 @@
                 <span class="perf-live-pill"><span class="pulse-dot"></span> Live</span>
               </div>
               <div class="perf-widget-grid" id="perfWidgetGrid"></div>
+            </article>
+            <article class="glass-card activity-panel insights-embed-panel">
+              <div class="panel-head">
+                <span class="panel-icon-insight">📈</span>
+                <div>
+                  <h3>GitHub Streak &amp; Stats</h3>
+                  <p>Live contribution metrics</p>
+                </div>
+              </div>
+              <div class="github-stats-embed" id="githubStatsEmbed" aria-live="polite">
+                <p class="embed-loading">Loading GitHub stats…</p>
+              </div>
+            </article>
+            <article class="glass-card activity-panel insights-wide insights-profiles">
+              <div class="panel-head">
+                <span class="panel-icon-insight">🔗</span>
+                <div>
+                  <h3>Profiles &amp; IDs</h3>
+                  <p>Quick links from live config</p>
+                </div>
+              </div>
+              <div id="profileLinksLive" class="profile-links-live"></div>
             </article>
           </div>
         </div>
@@ -691,26 +891,25 @@
         <header class="section-head">
           <span class="section-tag">07 — Latest Writing</span>
           <h2 class="section-title">Notes &amp; <span class="gradient-text">thoughts</span></h2>
-          <p class="section-sub">Technical notes, learnings &amp; build logs — structure ready for your next post.</p>
+          <p class="section-sub">Technical notes, learnings &amp; build logs from data engineering and AI projects.</p>
         </header>
         <div class="writing-grid">
           <article class="glass-card writing-card writing-featured">
-            <span class="writing-tag">Coming soon</span>
+            <span class="writing-tag">Build log</span>
             <h3>Building production lakehouse pipelines on Databricks</h3>
-            <p>Patterns from enterprise ETL — Unity Catalog, Delta Live Tables, and GenAI upskilling at scale.</p>
-            <div class="writing-meta"><span>Data Engineering</span><span>·</span><span>Draft</span></div>
-            <span class="writing-status">📝 Placeholder — add your Medium/Dev.to link</span>
+            <p>Patterns from enterprise ETL at R Systems — Unity Catalog, Delta Live Tables, and GenAI upskilling at scale.</p>
+            <div class="writing-meta"><span>Data Engineering</span><span>·</span><span>In progress</span></div>
           </article>
           <article class="glass-card writing-card">
-            <span class="writing-tag">Idea</span>
+            <span class="writing-tag">Deep dive</span>
             <h3>Multi-agent POC planning with RAG</h3>
             <p>How a 6-agent LLM pipeline generates architecture docs, APIs, and data models from a single brief.</p>
             <div class="writing-meta"><span>AI / LLMs</span><span>·</span><span>Outline</span></div>
           </article>
           <article class="glass-card writing-card">
-            <span class="writing-tag">Idea</span>
-            <h3>From hackathon to patent: innovation at Chitkara</h3>
-            <p>Co-inventor journey — assistive headgear, consumer tech, and CURIN research workflows.</p>
+            <span class="writing-tag">Reflection</span>
+            <h3>From hackathon to patent at Chitkara</h3>
+            <p>From CURIN lab work to granted IP — assistive headgear, an integrated phone case, and a multifunctional cooling pad, plus filed applications in IoT safety, sign-language assistive tech, and AI-driven thermal wearables.</p>
             <div class="writing-meta"><span>Innovation</span><span>·</span><span>Outline</span></div>
           </article>
         </div>
@@ -724,52 +923,54 @@
           <h2 class="section-title">Credentials &amp; <span class="gradient-text">continuous learning</span></h2>
         </header>
         <div class="certs-row">
-          <article class="cert-flip-wrap" tabindex="0" role="button" aria-label="Flip Databricks certification card">
-            <div class="cert-flip glass-card cert-card cert-db">
-              <div class="cert-flip-inner">
-                <div class="cert-flip-front">
-                  <div class="cert-glow"></div>
-                  <span class="cert-symbol">◆</span>
-                  <h3>Databricks Certified Data Engineer Associate</h3>
-                  <p>Spark, Unity Catalog, Lakeflow Connect, ingestion patterns &amp; production pipelines.</p>
-                  <span class="cert-flip-hint">Click to flip ↻</span>
-                </div>
-                <div class="cert-flip-back">
-                  <span class="cert-symbol">✓</span>
-                  <h3>Verified Credential</h3>
-                  <p>Issued credential · active in Databricks Certified Directory</p>
-                  <div class="cert-actions">
-                    <a href="https://credentials.databricks.com/26a22197-b2ed-4002-80a2-dae3b4abb0d8" target="_blank" rel="noopener" class="btn btn-glass btn-sm" onclick="event.stopPropagation()">Credential</a>
-                    <a href="https://directory.databrickscertified.com/profile/701279c0-04e0-4025-8ac4-6a8fea31f2d1" target="_blank" rel="noopener" class="btn btn-glass btn-sm" onclick="event.stopPropagation()">Directory</a>
-                  </div>
-                </div>
-              </div>
+          <article class="glass-card cert-card cert-db">
+            <div class="cert-glow"></div>
+            <span class="cert-symbol">◆</span>
+            <h3>Databricks Certified Data Engineer Associate</h3>
+            <p>Spark, Unity Catalog, Lakeflow Connect, ingestion patterns &amp; production pipelines.</p>
+            <div class="cert-actions" id="certDbActions">
+              <a href="https://credentials.databricks.com/26a22197-b2ed-4002-80a2-dae3b4abb0d8" target="_blank" rel="noopener" class="btn btn-primary btn-sm" id="certVerifyLink">Verify on Databricks ↗</a>
+              <a href="https://directory.databrickscertified.com/profile/701279c0-04e0-4025-8ac4-6a8fea31f2d1" target="_blank" rel="noopener" class="btn btn-glass btn-sm" id="certDirectoryLink">Directory profile</a>
             </div>
           </article>
-          <article class="cert-flip-wrap" tabindex="0" role="button" aria-label="Flip continuous learning card">
-            <div class="cert-flip glass-card cert-card">
-              <div class="cert-flip-inner">
-                <div class="cert-flip-front">
-                  <span class="cert-symbol cert-symbol-alt">∞</span>
-                  <h3>Continuous Learning</h3>
-                  <p>Kaggle · LeetCode · Coursera · Credly · GeeksforGeeks — always leveling up.</p>
-                  <span class="cert-flip-hint">Click to flip ↻</span>
-                </div>
-                <div class="cert-flip-back">
-                  <span class="cert-symbol cert-symbol-alt">🚀</span>
-                  <h3>Always Building</h3>
-                  <p>Open source · hackathons · certifications · patents</p>
-                  <div class="cert-actions">
-                    <a href="https://www.kaggle.com/shail2604" target="_blank" rel="noopener" class="btn btn-glass btn-sm" onclick="event.stopPropagation()">Kaggle</a>
-                    <a href="https://orcid.org/0009-0005-6101-1998" target="_blank" rel="noopener" class="btn btn-glass btn-sm" onclick="event.stopPropagation()">ORCID</a>
-                  </div>
-                </div>
-              </div>
+          <article class="glass-card cert-card">
+            <span class="cert-symbol cert-symbol-alt">∞</span>
+            <h3>Continuous Learning</h3>
+            <p>Kaggle · LeetCode · Coursera · Credly · GeeksforGeeks — always leveling up.</p>
+            <div class="cert-actions">
+              <a href="https://www.kaggle.com/shail2604" target="_blank" rel="noopener" class="btn btn-glass btn-sm">Kaggle</a>
+              <a href="https://orcid.org/0009-0005-6101-1998" target="_blank" rel="noopener" class="btn btn-glass btn-sm">ORCID</a>
             </div>
           </article>
         </div>
       </div>
     </section>
+
+    <section class="section" id="learning">
+      <div class="container">
+        <header class="section-head">
+          <span class="section-tag">Currently learning</span>
+          <h2 class="section-title">Growing <span class="gradient-text">every week</span></h2>
+          <p class="section-sub">Topics I'm actively exploring — progress reflects hands-on project work, not course completion.</p>
+        </header>
+        <div class="learning-grid reveal-stagger" id="learningList"></div>
+      </div>
+    </section>
+
+    <div class="section-divider" aria-hidden="true"><span class="section-divider-line"></span></div>
+
+    <section class="section" id="faq">
+      <div class="container">
+        <header class="section-head section-head-center">
+          <span class="section-tag">For recruiters</span>
+          <h2 class="section-title">Quick <span class="gradient-text">answers</span></h2>
+          <p class="section-sub">Common hiring questions — availability, authorization, and how to reach me.</p>
+        </header>
+        <div class="faq-list reveal-stagger" id="faqList"></div>
+      </div>
+    </section>
+
+    <div class="section-divider" aria-hidden="true"><span class="section-divider-line"></span></div>
 
     <section class="section" id="contact">
       <div class="container">
@@ -780,15 +981,18 @@
             <p class="section-sub">Open to full-time roles, collaborations, and meaningful projects.</p>
           </header>
           <div class="contact-channels">
-            <button type="button" class="contact-email copy-btn" data-copy="shail020604@gmail.com" data-label="Email">
+            <a href="mailto:shail020604@gmail.com" class="contact-email">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
               shail020604@gmail.com
-              <span class="copy-icon">⎘</span>
-            </button>
-            <button type="button" class="contact-phone copy-btn" data-copy="+918288851361" data-label="Phone">
+            </a>
+            <a href="tel:+918288851361" class="contact-phone">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
               +91 82888 51361
-              <span class="copy-icon">⎘</span>
-            </button>
+            </a>
+            <a href="https://www.linkedin.com/in/shail2604" target="_blank" rel="noopener" class="contact-linkedin btn btn-glass">
+              <i class="devicon-linkedin-plain"></i>
+              Message on LinkedIn
+            </a>
           </div>
           <form class="contact-form" id="contactForm" novalidate>
             <div class="form-row">
@@ -806,6 +1010,9 @@
               <textarea name="message" rows="4" required placeholder="Tell me about the opportunity or project…"></textarea>
             </label>
             <button type="submit" class="btn btn-primary btn-magnetic">Send message</button>
+            <a href="assets/resume.pdf" class="btn btn-glass" id="contactResumeLink" download="Shail_Sharma_Resume.pdf" target="_blank" rel="noopener">Download resume</a>
+            <button type="button" class="btn btn-glass" id="downloadVcardBtn">Download vCard</button>
+            <p class="contact-form-error" id="contactFormError" hidden role="alert"></p>
           </form>
           <div class="contact-success" id="contactSuccess" hidden>
             <div class="contact-success-icon">✓</div>
@@ -818,7 +1025,7 @@
               <i class="devicon-github-original"></i>
               <span>GitHub</span>
             </a>
-            <a href="https://in.linkedin.com/in/shail-sharma-607175250" target="_blank" rel="noopener" class="social-tile">
+            <a href="https://www.linkedin.com/in/shail2604" target="_blank" rel="noopener" class="social-tile">
               <i class="devicon-linkedin-plain"></i>
               <span>LinkedIn</span>
             </a>
@@ -836,7 +1043,35 @@
     </section>
   </main>
 
-  <div class="achievements-tray" id="achievementsTray" aria-live="polite"></div>
+  <div class="cmd-palette-overlay" id="cmdOverlay" hidden></div>
+  <div class="cmd-palette" id="cmdPalette" role="dialog" aria-label="Command palette" hidden>
+    <div class="cmd-palette-head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="search" id="cmdInput" class="cmd-input" placeholder="Jump to section, open link, or run action…" autocomplete="off" spellcheck="false">
+      <kbd class="cmd-kbd">Esc</kbd>
+    </div>
+    <ul class="cmd-list" id="cmdList"></ul>
+    <p class="cmd-foot"><kbd>Ctrl</kbd>+<kbd>K</kbd> anytime · <kbd>?</kbd> shortcuts · <kbd>`</kbd> terminal</p>
+  </div>
+
+  <div class="shortcuts-panel" id="shortcutsPanel" role="dialog" aria-label="Keyboard shortcuts" hidden>
+    <div class="shortcuts-head">
+      <h4>Keyboard shortcuts</h4>
+      <button type="button" class="shortcuts-close" id="shortcutsClose" aria-label="Close">×</button>
+    </div>
+    <ul class="shortcuts-list">
+      <li><kbd>Ctrl</kbd><kbd>K</kbd><span>Command palette</span></li>
+      <li><kbd>?</kbd><span>Show shortcuts</span></li>
+      <li><kbd>G</kbd><span> then </span><kbd>H</kbd><span>Go home</span></li>
+      <li><kbd>G</kbd><span> then </span><kbd>P</kbd><span>Go to projects</span></li>
+      <li><kbd>G</kbd><span> then </span><kbd>E</kbd><span>Go to experience</span></li>
+      <li><kbd>G</kbd><span> then </span><kbd>C</kbd><span>Go to contact</span></li>
+      <li><kbd>T</kbd><span>Toggle theme panel</span></li>
+      <li><kbd>R</kbd><span>Refresh live data</span></li>
+      <li><kbd>`</kbd><span>Open terminal</span></li>
+    </ul>
+  </div>
+  <div class="shortcuts-overlay" id="shortcutsOverlay" hidden></div>
 
   <div class="terminal-wrap" id="terminalWrap" hidden>
     <div class="terminal glass-card">
@@ -853,38 +1088,6 @@
     </div>
   </div>
 
-  <!-- Interactive overlays -->
-  <nav class="section-dots" id="sectionDots" aria-label="Jump to section"></nav>
-
-  <div class="cmd-palette-overlay" id="cmdOverlay" hidden></div>
-  <div class="cmd-palette" id="cmdPalette" role="dialog" aria-label="Command palette" hidden>
-    <div class="cmd-palette-head">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      <input type="search" id="cmdInput" class="cmd-input" placeholder="Jump to section, open link, or run action…" autocomplete="off" spellcheck="false">
-      <kbd class="cmd-kbd">Esc</kbd>
-    </div>
-    <ul class="cmd-list" id="cmdList"></ul>
-    <p class="cmd-foot"><kbd>Ctrl</kbd>+<kbd>K</kbd> anytime · <kbd>?</kbd> shortcuts</p>
-  </div>
-
-  <div class="shortcuts-panel" id="shortcutsPanel" role="dialog" aria-label="Keyboard shortcuts" hidden>
-    <div class="shortcuts-head">
-      <h4>Keyboard shortcuts</h4>
-      <button type="button" class="shortcuts-close" id="shortcutsClose" aria-label="Close">×</button>
-    </div>
-    <ul class="shortcuts-list">
-      <li><kbd>Ctrl</kbd><kbd>K</kbd><span>Command palette</span></li>
-      <li><kbd>?</kbd><span>Show shortcuts</span></li>
-      <li><kbd>G</kbd><span> then </span><kbd>H</kbd><span>Go home</span></li>
-      <li><kbd>G</kbd><span> then </span><kbd>P</kbd><span>Go to projects</span></li>
-      <li><kbd>G</kbd><span> then </span><kbd>L</kbd><span>Go to live dashboard</span></li>
-      <li><kbd>T</kbd><span>Toggle theme panel</span></li>
-      <li><kbd>R</kbd><span>Refresh live data</span></li>
-      <li><kbd>`</kbd><span>Open terminal</span></li>
-    </ul>
-  </div>
-  <div class="shortcuts-overlay" id="shortcutsOverlay" hidden></div>
-
   <div class="project-modal" id="projectModal" role="dialog" aria-label="Project details" hidden>
     <div class="project-modal-backdrop" id="projectModalBackdrop"></div>
     <div class="project-modal-card glass-card">
@@ -893,6 +1096,7 @@
       <h3 id="projectModalTitle"></h3>
       <p id="projectModalDesc"></p>
       <div class="project-modal-chips" id="projectModalChips"></div>
+      <div class="project-modal-case" id="projectModalCase" hidden></div>
       <div class="project-modal-actions">
         <a href="#" id="projectModalGithub" class="btn btn-primary btn-sm" target="_blank" rel="noopener" hidden>View on GitHub →</a>
         <button type="button" class="btn btn-glass btn-sm" id="projectModalDismiss">Close</button>
@@ -901,7 +1105,32 @@
   </div>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <p class="kbd-hint" id="kbdHint"><kbd>Ctrl</kbd>+<kbd>K</kbd> search · <kbd>`</kbd> terminal · double-click name to scramble</p>
+
+  <!-- Quick contact FAB -->
+  <div class="contact-fab-wrap" id="contactFabWrap">
+    <div class="contact-fab-menu" id="contactFabMenu" hidden>
+      <a href="mailto:shail020604@gmail.com" class="contact-fab-action" title="Email">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        <span>Email</span>
+      </a>
+      <a href="https://www.linkedin.com/in/shail2604" target="_blank" rel="noopener" class="contact-fab-action contact-fab-li" title="LinkedIn">
+        <span class="linkedin-logo">in</span>
+        <span>LinkedIn</span>
+      </a>
+      <button type="button" class="contact-fab-action" id="sharePortfolioFab" title="Share portfolio">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+        <span>Share</span>
+      </button>
+      <button type="button" class="contact-fab-action" id="downloadVcardFab" title="Download contact card">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span>vCard</span>
+      </button>
+    </div>
+    <button type="button" class="contact-fab-toggle" id="contactFabToggle" aria-expanded="false" aria-controls="contactFabMenu" aria-label="Quick contact">
+      <svg class="contact-fab-icon contact-fab-icon-open" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <svg class="contact-fab-icon contact-fab-icon-close" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
 
   <!-- Theme customizer -->
   <button type="button" class="terminal-fab" id="terminalFab" aria-label="Open terminal" title="Terminal (`)">
@@ -931,11 +1160,11 @@
     <div class="theme-block">
       <span class="theme-label">Accent palette</span>
       <div class="accent-swatches" role="group">
-        <button type="button" class="swatch active" data-accent="violet" style="--swatch:#8b5cf6" title="Violet"></button>
-        <button type="button" class="swatch" data-accent="ocean" style="--swatch:#0ea5e9" title="Ocean"></button>
-        <button type="button" class="swatch" data-accent="emerald" style="--swatch:#10b981" title="Emerald"></button>
-        <button type="button" class="swatch" data-accent="sunset" style="--swatch:#f97316" title="Sunset"></button>
-        <button type="button" class="swatch" data-accent="rose" style="--swatch:#f43f5e" title="Rose"></button>
+        <button type="button" class="swatch active" data-accent="blue" style="--swatch:#2563eb" title="Blue"></button>
+        <button type="button" class="swatch" data-accent="ocean" style="--swatch:#1e40af" title="Navy"></button>
+        <button type="button" class="swatch" data-accent="emerald" style="--swatch:#0891b2" title="Cyan"></button>
+        <button type="button" class="swatch" data-accent="violet" style="--swatch:#7c6cf0" title="Violet"></button>
+        <button type="button" class="swatch" data-accent="sunset" style="--swatch:#6366f1" title="Indigo"></button>
         <button type="button" class="swatch" data-accent="databricks" style="--swatch:#ff3621" title="Databricks"></button>
       </div>
     </div>
@@ -943,8 +1172,8 @@
     <div class="theme-block">
       <span class="theme-label">Custom color</span>
       <div class="custom-color-row">
-        <input type="color" id="customColor" value="#8b5cf6" aria-label="Pick custom accent color">
-        <span class="custom-hex" id="customHex">#8b5cf6</span>
+        <input type="color" id="customColor" value="#2563eb" aria-label="Pick custom accent color">
+        <span class="custom-hex" id="customHex">#2563eb</span>
         <button type="button" class="btn btn-glass btn-sm" id="applyCustom">Apply</button>
       </div>
     </div>
@@ -956,11 +1185,6 @@
         <input type="checkbox" id="toggleParticles" checked>
         <span class="toggle-slider"></span>
       </label>
-      <label class="toggle-row">
-        <span>Cursor glow</span>
-        <input type="checkbox" id="toggleCursor" checked>
-        <span class="toggle-slider"></span>
-      </label>
     </div>
 
     <button type="button" class="btn btn-glass btn-sm theme-reset" id="themeReset">Reset to default</button>
@@ -968,8 +1192,31 @@
 
   <footer class="footer">
     <div class="container footer-inner">
-      <p class="footer-brand">Shail<span class="logo-accent">.</span></p>
-      <p>© <span id="year"></span> · Greater Noida, India</p>
+      <div class="footer-brand-block">
+        <p class="footer-brand">Shail<span class="logo-accent">.</span></p>
+        <p class="footer-tagline">Associate Data Engineer · AI &amp; ML Developer</p>
+      </div>
+      <nav class="footer-social" aria-label="Social links">
+        <a href="https://github.com/Shailsharma2604" target="_blank" rel="noopener" class="footer-social-link" aria-label="GitHub">
+          <i class="devicon-github-original"></i>
+        </a>
+        <a href="https://www.linkedin.com/in/shail2604" target="_blank" rel="noopener" class="footer-social-link" aria-label="LinkedIn">
+          <i class="devicon-linkedin-plain"></i>
+        </a>
+        <a href="https://directory.databrickscertified.com/profile/701279c0-04e0-4025-8ac4-6a8fea31f2d1" target="_blank" rel="noopener" class="footer-social-link" aria-label="Databricks Certified Directory">
+          <span class="footer-icon-db">◆</span>
+        </a>
+        <a href="https://www.kaggle.com/shail2604" target="_blank" rel="noopener" class="footer-social-link" aria-label="Kaggle">
+          <span class="footer-icon-kg">K</span>
+        </a>
+        <a href="mailto:shail020604@gmail.com" class="footer-social-link" aria-label="Email">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        </a>
+        <a href="assets/resume.pdf" class="footer-social-link footer-resume-link" download="Shail_Sharma_Resume.pdf" target="_blank" rel="noopener" aria-label="Download resume">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9 15 12 18 15 15"/></svg>
+        </a>
+      </nav>
+      <p class="footer-copy">© <span id="year"></span> · Greater Noida, India</p>
     </div>
   </footer>
 
@@ -977,11 +1224,12 @@
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
   </button>
 
-  <script src="js/main.js" defer></script>
-  <script src="js/live.js?v=2" defer></script>
-  <script src="js/interactive.js" defer></script>
-  <script src="js/extras.js" defer></script>
-  <script src="js/nextlevel.js" defer></script>
+  <script src="js/main.js?v=16" defer></script>
+  <script src="js/site-content.js?v=13" defer></script>
+  <script src="js/live.js?v=12" defer></script>
+  <script src="js/interactive.js?v=17" defer></script>
+  <script src="js/extras.js?v=13" defer></script>
+  <script src="js/nextlevel.js?v=15" defer></script>
   <script type="importmap">
     {
       "imports": {
@@ -989,6 +1237,6 @@
       }
     }
   </script>
-  <script type="module" src="js/speed-insights.js?v=2"></script>
+  <script type="module" src="js/speed-insights.js?v=10"></script>
 </body>
 </html>

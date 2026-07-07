@@ -9,8 +9,12 @@
     "boardImage": "https://holopin.me/shail_sharma_2604"
   },
   "linkedin": {
-    "vanity": "shail-sharma-607175250",
-    "profileUrl": "https://in.linkedin.com/in/shail-sharma-607175250",
-    "latestPostUrl": ""
+    "vanity": "shail2604",
+    "profileUrl": "https://www.linkedin.com/in/shail2604",
+    "latestPostUrl": "",
+    "name": "Shail Sharma",
+    "headline": "Associate Data Engineer @ R Systems International | AI/ML Enthusiast | Python • Machine Learning • Deep Learning",
+    "location": "Greater Noida, India",
+    "openToWork": true
   }
 }

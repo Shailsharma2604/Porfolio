@@ -18,19 +18,35 @@
       boardImage: 'https://holopin.me/shail_sharma_2604',
     },
     linkedin: {
-      vanity: 'shail-sharma-607175250',
-      profileUrl: 'https://in.linkedin.com/in/shail-sharma-607175250',
+      vanity: 'shail2604',
+      profileUrl: 'https://www.linkedin.com/in/shail2604',
       latestPostUrl: '',
+      name: 'Shail Sharma',
+      headline:
+        'Associate Data Engineer @ R Systems International | AI/ML Enthusiast | Python • Machine Learning • Deep Learning',
+      location: 'Greater Noida, India',
+      openToWork: true,
     },
   };
 
   const STATIC_GITHUB_STATS = {
     public_repos: 51,
-    followers: 8,
+    followers: 10,
     following: 0,
     totalStars: 0,
     accountYears: 3,
   };
+
+  const STATIC_GITHUB_LANGUAGES = [
+    { name: 'Python', count: 22 },
+    { name: 'Jupyter Notebook', count: 9 },
+    { name: 'JavaScript', count: 6 },
+    { name: 'HTML', count: 5 },
+    { name: 'CSS', count: 3 },
+    { name: 'Java', count: 2 },
+    { name: 'C++', count: 2 },
+    { name: 'TypeScript', count: 1 },
+  ];
 
   const REFRESH_SEC = 300;
   const CACHE_TTL = REFRESH_SEC * 1000;
@@ -51,12 +67,18 @@
     heroGranted: $('#heroGrantedCount'),
     heroGrantedText: $('#heroGrantedText'),
     patentGrantedBadge: $('#patentGrantedBadge'),
+    patentFiledBadge: $('#patentFiledBadge'),
     patentBadge: $('#patentCountBadge'),
     patentSubGranted: $('#patentSubGranted'),
     patentSubFiled: $('#patentSubFiled'),
     patentsGrid: $('#patentsGrid'),
     patentSpotlight: $('#patentSpotlight'),
+    aboutPatentTeaser: $('#aboutPatentTeaser'),
     linkedin: $('#linkedinContent'),
+    linkedinShowcase: $('#linkedinShowcase'),
+    aboutLinkedInName: $('#aboutLinkedInName'),
+    aboutLinkedInHeadline: $('#aboutLinkedInHeadline'),
+    aboutLinkedInTile: $('#aboutLinkedInTile'),
     holopin: $('#holopinBoard'),
     lastUpdated: $('#statsUpdated'),
     countdown: $('#refreshCountdown'),
@@ -70,6 +92,7 @@
     commitTicker: $('#commitTicker'),
     commitTickerWrap: $('#commitTickerWrap'),
     githubPulse: $('#githubPulse'),
+    githubStatsEmbed: $('#githubStatsEmbed'),
   };
 
   function getCached(key) {
@@ -92,6 +115,80 @@
 
   function escapeAttr(str) {
     return String(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+  }
+
+  function initEmbedImageFallbacks() {
+    $$('img[data-embed-fallback]').forEach((img) => {
+      if (img.dataset.embedBound) return;
+      img.dataset.embedBound = '1';
+      img.addEventListener('error', () => {
+        const msg = img.dataset.embedFallback || 'Image unavailable';
+        const wrap = img.closest('.contrib-wrap, .github-embed-streak-wrap') || img.parentElement;
+        if (!wrap || wrap.querySelector('.embed-fallback-msg')) return;
+        img.hidden = true;
+        const note = document.createElement('p');
+        note.className = 'embed-fallback-msg feed-empty';
+        note.textContent = msg;
+        wrap.appendChild(note);
+      });
+    });
+  }
+
+  function renderGitHubEmbed(data) {
+    if (!els.githubStatsEmbed) return;
+    const u = data?.user;
+    const login = u?.login || STATIC_CONFIG.github;
+    const profileUrl = `https://github.com/${login}`;
+    const suffix = data?.fallback ? ' · cached' : '';
+
+    if (!u) {
+      els.githubStatsEmbed.innerHTML = `
+        <div class="github-embed-card glass-card">
+          <h4 class="github-embed-title">@${login}</h4>
+          <p class="embed-fallback-msg">Stats unavailable — <a href="${profileUrl}" target="_blank" rel="noopener">view on GitHub ↗</a></p>
+        </div>`;
+      return;
+    }
+
+    const streakUrl =
+      `https://streak-stats.demolab.com/?user=${encodeURIComponent(login)}&theme=transparent&hide_border=true&stroke=2563eb&ring=0ea5e9&fire=60a5fa&currStreakLabel=2563eb`;
+
+    els.githubStatsEmbed.innerHTML = `
+      <div class="github-embed-card glass-card pop-in" style="--d:0.05s">
+        <h4 class="github-embed-title">@${login}</h4>
+        <div class="github-embed-stats">
+          <div class="github-embed-stat">
+            <span class="github-embed-val">${u.public_repos}+</span>
+            <span class="github-embed-label">Public repos</span>
+          </div>
+          <div class="github-embed-stat">
+            <span class="github-embed-val">${data.totalStars || 0}</span>
+            <span class="github-embed-label">Total stars</span>
+          </div>
+          <div class="github-embed-stat">
+            <span class="github-embed-val">${u.followers}</span>
+            <span class="github-embed-label">Followers</span>
+          </div>
+          <div class="github-embed-stat">
+            <span class="github-embed-val">${data.accountYears || 1}+ yrs</span>
+            <span class="github-embed-label">On GitHub</span>
+          </div>
+        </div>
+        <a href="${profileUrl}" target="_blank" rel="noopener" class="btn btn-glass btn-sm">Open profile ↗</a>
+        ${data.fallback ? '<p class="embed-fallback-msg">Live refresh unavailable — showing configured stats.</p>' : ''}
+      </div>
+      <div class="github-embed-streak-wrap glass-card pop-in" style="--d:0.1s">
+        <img
+          src="${streakUrl}"
+          alt="GitHub contribution streak for ${login}"
+          class="stats-img github-streak-img"
+          loading="lazy"
+          data-embed-fallback="Streak chart unavailable — contributions still visible on GitHub"
+        >
+      </div>`;
+
+    initEmbedImageFallbacks();
+    animateDynamicContent(els.githubStatsEmbed);
   }
 
   function initMarqueePause() {
@@ -123,6 +220,7 @@
     }
     if (gh) {
       renderGitHub(gh);
+      renderGitHubEmbed(gh);
       renderGitHubNotice('');
     }
     if (gh) {
@@ -254,6 +352,7 @@
         $$('.live-tab-panel').forEach((p) => p.classList.remove('active'));
         tab.classList.add('active');
         $(`.live-tab-panel[data-panel="${tab.dataset.tab}"]`)?.classList.add('active');
+        window.portfolioSyncFilterIndicator?.($('.live-tabs'));
       });
     });
   }
@@ -265,32 +364,115 @@
         btn.classList.add('active');
         patentFilter = btn.dataset.filter;
         if (patentsCache) renderPatentsGrid(patentsCache);
+        window.portfolioSyncFilterIndicator?.($('#patentFilters'));
       });
     });
+  }
+
+  function patentYear(p) {
+    const d = p.grantedDate || p.filedDate;
+    if (!d) return '';
+    const y = new Date(d).getFullYear();
+    return Number.isNaN(y) ? '' : String(y);
+  }
+
+  function patentTypeTag(p) {
+    if (p.patentNumber && String(p.patentNumber).startsWith('DES')) return 'Design';
+    if (p.status === 'Granted') return 'Utility';
+    return 'Application';
+  }
+
+  function patentRefLabel(p) {
+    if (p.patentNumber) {
+      const prefix = String(p.patentNumber).startsWith('DES') ? 'Design No.' : 'Patent No.';
+      return `<span class="patent-ref-row"><strong>${prefix}</strong> <code class="patent-ref-num">${p.patentNumber}</code></span>`;
+    }
+    if (p.portfolioRef) {
+      const ref = [p.portfolioRef, p.universityRef].filter(Boolean).join(' · ');
+      return `<span class="patent-ref-row"><strong>Ref.</strong> <code class="patent-ref-num">${ref}</code></span>`;
+    }
+    return '';
   }
 
   function patentCardHtml(p, i, variant = 'grid') {
     const isGranted = p.status === 'Granted';
     const cls = variant === 'spotlight' ? 'patent-spot-card' : 'patent-card';
+    const year = patentYear(p);
+    const typeTag = patentTypeTag(p);
+    const expandable = variant === 'grid';
+    const expandAttrs = expandable
+      ? ' tabindex="0" role="button" aria-expanded="false" aria-label="Toggle patent details"'
+      : '';
+    const expandHint = expandable
+      ? `<span class="patent-expand-hint"><span class="patent-expand-chevron">▾</span> Filing details</span>`
+      : '';
+
     return `
-      <article class="glass-card ${cls} pop-in ${isGranted ? 'patent-granted' : ''}" style="--d:${0.05 * i}s" data-status="${p.status || 'Filed'}">
+      <article class="glass-card ${cls} pop-in ${expandable ? 'patent-expandable' : 'patent-spot-expanded'} ${isGranted ? 'patent-granted' : 'patent-filed'}" style="--d:${0.05 * i}s" data-status="${p.status || 'Filed'}"${expandAttrs}>
         <div class="patent-top">
-          <span class="patent-status ${isGranted ? 'patent-status-granted' : ''}">${isGranted ? '🏅 Granted' : p.status || 'Filed'}</span>
+          <span class="patent-status ${isGranted ? 'patent-status-granted' : 'patent-status-filed'}">${isGranted ? '🏅 Granted' : p.status || 'Filed'}</span>
           <span class="patent-category">${p.category || 'Innovation'}</span>
         </div>
         <h3 class="patent-title">${p.title}</h3>
-        <div class="patent-meta">
-          <span><strong>App. No.</strong> ${p.applicationNumber}</span>
+        ${p.description ? `<p class="patent-desc">${p.description}</p>` : ''}
+        <div class="patent-tags">
+          ${year ? `<span class="patent-tag">${year}</span>` : ''}
+          ${typeTag ? `<span class="patent-tag patent-tag-type">${typeTag}</span>` : ''}
+          ${p.category ? `<span class="patent-tag patent-tag-domain">${p.category.split(' · ')[0]}</span>` : ''}
+        </div>
+        <div class="patent-meta patent-meta-primary">
+          ${patentRefLabel(p)}
+        </div>
+        ${expandHint}
+        <div class="patent-meta-extra">
+          <span><strong>App. No.</strong> <code class="patent-ref-num">${p.applicationNumber}</code></span>
           <span><strong>Filed</strong> ${formatDate(p.filedDate)}</span>
           ${p.grantedDate ? `<span><strong>Granted</strong> ${formatDate(p.grantedDate)}</span>` : ''}
+          ${p.coInventors?.length ? `<p class="patent-inventors">Co-inventors: ${p.coInventors.join(', ')}</p>` : ''}
         </div>
-        ${p.coInventors?.length ? `<p class="patent-inventors">Co-inventors: ${p.coInventors.join(', ')}</p>` : ''}
         ${
           p.patentUrl
-            ? `<a href="${p.patentUrl}" target="_blank" rel="noopener" class="patent-link btn btn-glass btn-sm">View patent ↗</a>`
+            ? `<a href="${p.patentUrl}" target="_blank" rel="noopener" class="patent-link btn btn-glass btn-sm">View on CURIN ↗</a>`
             : ''
         }
       </article>`;
+  }
+
+  function initPatentExpand(container) {
+    if (!container) return;
+    container.querySelectorAll('.patent-expandable').forEach((card) => {
+      if (card.dataset.expandBound) return;
+      card.dataset.expandBound = '1';
+      const toggle = () => {
+        const open = card.classList.toggle('expanded');
+        card.setAttribute('aria-expanded', open ? 'true' : 'false');
+      };
+      card.addEventListener('click', (e) => {
+        if (e.target.closest('a')) return;
+        toggle();
+      });
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          toggle();
+        }
+      });
+    });
+  }
+
+  function renderAboutPatentTeaser(data) {
+    if (!els.aboutPatentTeaser) return;
+    const granted = data.items?.filter((p) => p.status === 'Granted') || [];
+    if (!granted.length) return;
+    const items = granted
+      .map(
+        (p) =>
+          `<li><strong>${p.title}</strong>${p.patentNumber ? ` <span class="about-patent-ref">${p.patentNumber}</span>` : ''}</li>`
+      )
+      .join('');
+    els.aboutPatentTeaser.innerHTML = `
+      <ul class="about-patent-highlights">${items}</ul>
+      <a href="#patents" class="about-patent-cta">View all patents &amp; filings →</a>`;
   }
 
   function renderPatentsGrid(data) {
@@ -302,6 +484,7 @@
       return;
     }
     els.patentsGrid.innerHTML = items.map((p, i) => patentCardHtml(p, i)).join('');
+    initPatentExpand(els.patentsGrid);
     animateDynamicContent(els.patentsGrid);
   }
 
@@ -325,6 +508,13 @@
       requestAnimationFrame(() => grid.classList.add('visible'));
     }
   }
+  let pendingHeroGranted = null;
+  let pendingHeroPatents = null;
+
+  window.portfolioAnimateHeroMetrics = () => {
+    if (pendingHeroGranted !== null && els.heroGranted) animateValue(els.heroGranted, pendingHeroGranted, '');
+    if (pendingHeroPatents !== null && els.heroPatents) animateValue(els.heroPatents, pendingHeroPatents, '');
+  };
 
   function renderPatents(data) {
     patentsCache = data;
@@ -332,35 +522,65 @@
     const total = data.count || data.items?.length || 0;
     const filed = data.filedCount ?? total - granted;
 
-    if (els.heroGranted) animateValue(els.heroGranted, granted, '');
-    if (els.heroPatents) animateValue(els.heroPatents, total, '');
+    pendingHeroGranted = granted;
+    pendingHeroPatents = total;
+    if (document.querySelector('.hero-metrics')?.dataset.animated === '1') {
+      window.portfolioAnimateHeroMetrics();
+    }
     if (els.patentGrantedBadge) animateValue(els.patentGrantedBadge, granted, '');
+    if (els.patentFiledBadge) animateValue(els.patentFiledBadge, filed, '');
     if (els.patentBadge) animateValue(els.patentBadge, total, '');
     if (els.patentSubGranted) els.patentSubGranted.textContent = `${granted} granted`;
     if (els.patentSubFiled) els.patentSubFiled.textContent = `${filed} filed`;
     if (els.heroGrantedText) els.heroGrantedText.textContent = `${granted} Patent${granted !== 1 ? 's' : ''} Granted`;
 
+    window.portfolioUpdateSiteStats?.({
+      grantedCount: granted,
+      totalCount: total,
+    });
+
     renderPatentSpotlight(data);
     renderPatentsGrid(data);
+    renderAboutPatentTeaser(data);
   }
 
-  function renderLanguages(languages) {
+  function renderLanguages(languages, opts = {}) {
     if (!els.languageBars) return;
-    if (!languages?.length) {
-      els.languageBars.innerHTML = '<p class="feed-empty">No language data yet</p>';
+    const { fallback = false, partial = false, login = STATIC_CONFIG.github } = opts;
+    const useStatic = !languages?.length && (fallback || partial);
+    const list = languages?.length ? languages : useStatic ? STATIC_GITHUB_LANGUAGES : [];
+    const usingStatic = useStatic && list.length > 0;
+
+    if (!list.length) {
+      els.languageBars.innerHTML = `
+        <p class="feed-empty">Language breakdown unavailable right now.</p>
+        <button type="button" class="btn btn-glass btn-sm lang-retry-btn" data-lang-retry>Retry ↻</button>
+        <p class="lang-hint feed-empty">Set <code>GITHUB_TOKEN</code> in <code>.env</code> for live data, or
+          <a href="https://github.com/${login}?tab=repositories" target="_blank" rel="noopener">browse repos on GitHub ↗</a>
+        </p>`;
+      els.languageBars.querySelector('[data-lang-retry]')?.addEventListener('click', () => loadAll(true));
       return;
     }
-    const max = Math.max(...languages.map((l) => l.count));
-    els.languageBars.innerHTML = languages
-      .map(
-        (l) => `
+
+    const max = Math.max(...list.map((l) => l.count));
+    els.languageBars.innerHTML = `
+      ${list
+        .map(
+          (l) => `
       <div class="lang-row">
         <span class="lang-name">${l.name}</span>
-        <div class="lang-bar-track"><div class="lang-bar-fill" style="width:${(l.count / max) * 100}%"></div></div>
+        <div class="lang-bar-track"><div class="lang-bar-fill" style="width:${max ? (l.count / max) * 100 : 0}%"></div></div>
         <span class="lang-count">${l.count}</span>
       </div>`
-      )
-      .join('');
+        )
+        .join('')}
+      ${
+        usingStatic
+          ? '<p class="lang-hint feed-empty">Approximate breakdown — live GitHub refresh unavailable.</p>'
+          : partial
+            ? '<p class="lang-hint feed-empty">Based on available repo data — some details may be incomplete.</p>'
+            : ''
+      }`;
     animateDynamicContent(els.languageBars);
   }
 
@@ -644,8 +864,18 @@
   async function loadConfig() {
     const api = await fetchApi('/config');
     if (api.ok) return api.data;
-    const local = await fetchStaticJson('config/social.json');
-    return local || STATIC_CONFIG;
+
+    const profileApi = await fetchApi('/linkedin-profile');
+    const local = (await fetchStaticJson('config/social.json')) || STATIC_CONFIG;
+    if (profileApi.ok && local.linkedin) {
+      local.linkedin = {
+        ...local.linkedin,
+        headline: profileApi.data.headline || local.linkedin.headline,
+        name: profileApi.data.name || local.linkedin.name,
+        location: profileApi.data.location || local.linkedin.location,
+      };
+    }
+    return local;
   }
 
   async function loadPatents() {
@@ -666,7 +896,7 @@
       },
       repos: [],
       events: [],
-      languages: [],
+      languages: STATIC_GITHUB_LANGUAGES,
       latestEvent: null,
       totalStars: STATIC_GITHUB_STATS.totalStars,
       accountYears: STATIC_GITHUB_STATS.accountYears,
@@ -736,6 +966,7 @@
     renderCommitTicker(data.recentCommits);
     renderGitHubPulse(data.pulse, u.login, data.fallback, data.events);
     window.portfolioUpdatePerf?.(u.public_repos, u.followers);
+    window.portfolioUpdateSiteStats?.({ repoCount: u.public_repos });
     window.portfolioRefreshGlowCards?.();
 
     if (els.activity) {
@@ -788,45 +1019,174 @@
       requestAnimationFrame(() => els.repos?.classList.add('visible'));
     }
 
-    renderLanguages(data.languages);
+    renderLanguages(data.languages, {
+      fallback: data.fallback,
+      partial: data.partial,
+      login: u.login,
+    });
+    renderGitHubEmbed(data);
     if (els.lastUpdated) {
       const suffix = data.fallback ? ' (cached)' : data.partial ? ' (partial)' : '';
       els.lastUpdated.textContent = `Updated ${timeAgo(data.fetchedAt)}${suffix}`;
     }
   }
 
-  function renderLinkedIn(config) {
-    if (!els.linkedin) return;
-    const li = config.linkedin || {};
-    const postUrl = li.latestPostUrl?.trim();
+  function mergeLinkedInConfig(config) {
+    return {
+      ...STATIC_CONFIG.linkedin,
+      ...(config?.linkedin || {}),
+    };
+  }
 
-    els.linkedin.innerHTML = `
+  function getLinkedInHeadline(li) {
+    return li.headline || STATIC_CONFIG.linkedin.headline || '';
+  }
+
+  function linkedInPhotoSources(vanity) {
+    const slug = encodeURIComponent(vanity || 'shail2604');
+    const sources = [];
+    if (getApiBase()) sources.push('/api/linkedin-photo/image');
+    sources.push(
+      `https://unavatar.io/linkedin/${slug}`,
+      'assets/profile.jpg',
+      'https://github.com/Shailsharma2604.png?size=400'
+    );
+    return sources;
+  }
+
+  function initLinkedInPhoto(img, vanity) {
+    if (!img) return;
+    const sources = linkedInPhotoSources(vanity);
+    let index = 0;
+
+    function tryNext() {
+      index += 1;
+      if (index < sources.length) img.src = sources[index];
+      else img.classList.add('li-photo-fallback');
+    }
+
+    img.addEventListener('error', tryNext);
+    img.addEventListener('load', () => {
+      if (img.naturalWidth === 0) tryNext();
+    });
+    img.src = sources[0];
+  }
+
+  function buildLinkedInCardHtml(li, variant = 'full') {
+    const vanity = li.vanity || 'shail2604';
+    const profileUrl = li.profileUrl || `https://www.linkedin.com/in/${vanity}`;
+    const name = li.name || 'Shail Sharma';
+    const headline = getLinkedInHeadline(li);
+    const location = li.location || 'Greater Noida, India';
+    const postUrl = li.latestPostUrl?.trim();
+    const otw =
+      li.openToWork !== false
+        ? '<span class="li-otw-badge"><span class="pulse-dot"></span> Open to work</span>'
+        : '';
+
+    const postBlock =
+      postUrl && postUrl.includes('linkedin.com')
+        ? `<a href="${postUrl}" target="_blank" rel="noopener" class="linkedin-post-card"><span class="linkedin-logo">in</span><div><strong>Latest post</strong><p>View on LinkedIn →</p></div></a>`
+        : '';
+
+    if (variant === 'compact') {
+      return `
+      <div class="linkedin-profile-card linkedin-profile-card--compact pop-in">
+        <div class="li-card-main">
+          <img class="li-card-photo" alt="${escapeAttr(name)} — LinkedIn profile" width="72" height="72" loading="lazy" decoding="async">
+          <div class="li-card-body">
+            <div class="li-card-head">
+              <h3 class="li-card-name">${name}</h3>
+              ${otw}
+            </div>
+            <p class="li-card-headline">${headline}</p>
+            <p class="li-card-location">${location}</p>
+          </div>
+        </div>
+        <div class="li-card-actions">
+          <a href="${profileUrl}" target="_blank" rel="noopener" class="btn btn-primary btn-sm btn-linkedin">
+            <span class="linkedin-logo">in</span> Connect on LinkedIn
+          </a>
+          <a href="${profileUrl}" target="_blank" rel="noopener" class="btn btn-glass btn-sm">View profile ↗</a>
+        </div>
+      </div>`;
+    }
+
+    return `
       <div class="linkedin-stack pop-in">
+        <div class="linkedin-profile-card">
+          <div class="li-card-main">
+            <img class="li-card-photo" alt="${escapeAttr(name)} — LinkedIn profile" width="96" height="96" loading="lazy" decoding="async">
+            <div class="li-card-body">
+              <div class="li-card-head">
+                <h3 class="li-card-name">${name}</h3>
+                ${otw}
+              </div>
+              <p class="li-card-headline">${headline}</p>
+              <p class="li-card-location">${location}</p>
+              <div class="li-card-actions">
+                <a href="${profileUrl}" target="_blank" rel="noopener" class="btn btn-primary btn-sm btn-linkedin">
+                  <span class="linkedin-logo">in</span> Connect
+                </a>
+                <a href="${profileUrl}" target="_blank" rel="noopener" class="btn btn-glass btn-sm">Message ↗</a>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="linkedin-granted-banner">
           <span class="linkedin-granted-icon">🏅</span>
           <div>
             <strong>3 Granted Patents</strong>
-            <p>Listed on your LinkedIn profile — headgear, phonecase &amp; cooling pad</p>
+            <p>Listed on LinkedIn — headgear, phonecase &amp; cooling pad</p>
           </div>
-          <a href="${li.profileUrl}" target="_blank" rel="noopener" class="btn btn-primary btn-sm">LinkedIn ↗</a>
+          <a href="${profileUrl}" target="_blank" rel="noopener" class="btn btn-glass btn-sm">Verify ↗</a>
         </div>
-        ${
-          postUrl && postUrl.includes('linkedin.com')
-            ? `<a href="${postUrl}" target="_blank" rel="noopener" class="linkedin-post-card"><span class="linkedin-logo">in</span><div><strong>Latest post</strong><p>View on LinkedIn →</p></div></a>`
-            : `<div class="linkedin-badge-wrap" id="linkedinBadgeMount"></div>`
-        }
+        ${postBlock}
+        <p class="linkedin-hint">Live profile card · photo via secure proxy with GitHub &amp; unavatar fallbacks</p>
       </div>`;
+  }
 
-    if ($('#linkedinBadgeMount') && li.vanity && !document.querySelector('script[src*="profile.js"]')) {
-      const script = document.createElement('script');
-      script.src = 'https://platform.linkedin.com/badges/js/profile.js';
-      script.async = true;
-      script.defer = true;
-      document.body.appendChild(script);
-      $('#linkedinBadgeMount').innerHTML = `
-        <div class="badge-base LI-profile-badge" data-locale="en_US" data-size="medium"
-          data-theme="dark" data-type="VERTICAL" data-vanity="${li.vanity}"></div>`;
+  function mountLinkedInPhotos(root, vanity) {
+    if (!root) return;
+    root.querySelectorAll('.li-card-photo').forEach((img) => initLinkedInPhoto(img, vanity));
+  }
+
+  function renderAboutLinkedInTile(config) {
+    const li = mergeLinkedInConfig(config);
+    const vanity = li.vanity || 'shail2604';
+    const profileUrl = li.profileUrl || `https://www.linkedin.com/in/${vanity}`;
+    const headline = getLinkedInHeadline(li);
+    const name = li.name || 'Shail Sharma';
+
+    if (els.aboutLinkedInName) els.aboutLinkedInName.textContent = name;
+    if (els.aboutLinkedInHeadline) els.aboutLinkedInHeadline.textContent = headline;
+
+    if (els.aboutLinkedInTile) {
+      const photo = els.aboutLinkedInTile.querySelector('.about-li-photo');
+      const link = els.aboutLinkedInTile.querySelector('a.btn-linkedin');
+      if (link) link.href = profileUrl;
+      if (photo && !photo.dataset.liBound) {
+        photo.dataset.liBound = '1';
+        initLinkedInPhoto(photo, vanity);
+      }
     }
+  }
+
+  function renderLinkedIn(config) {
+    const li = mergeLinkedInConfig(config);
+    const vanity = li.vanity || 'shail2604';
+
+    if (els.linkedin) {
+      els.linkedin.innerHTML = buildLinkedInCardHtml(li, 'full');
+      mountLinkedInPhotos(els.linkedin, vanity);
+    }
+
+    if (els.linkedinShowcase) {
+      els.linkedinShowcase.innerHTML = buildLinkedInCardHtml(li, 'compact');
+      mountLinkedInPhotos(els.linkedinShowcase, vanity);
+    }
+
+    renderAboutLinkedInTile(config);
   }
 
   function renderHolopin(config) {
@@ -857,19 +1217,22 @@
 
   function showError() {
     const msg = getActionableErrorMessage();
-    if (els.stats) {
-      els.stats.innerHTML = `<p class="feed-error">${msg} <button type="button" id="retryLive" class="btn btn-glass btn-sm">Retry</button></p>`;
-      $('#retryLive')?.addEventListener('click', loadAll);
-    }
-    if (els.patentsGrid) {
+    renderLinkedIn(STATIC_CONFIG);
+    const gh = buildGitHubFallback(STATIC_CONFIG);
+    renderGitHub(gh);
+    renderGitHubEmbed(gh);
+    renderGitHubNotice(msg);
+    if (els.patentsGrid && !patentsCache) {
       els.patentsGrid.innerHTML = '<p class="feed-empty">Patent data could not be loaded.</p>';
     }
-    renderGitHubNotice('');
   }
 
   function getGitHubNoticeMessage(githubResult) {
     if (window.location.protocol === 'file:') {
       return 'Offline preview — patents and profile load from local files. Run npm start and open http://localhost:3000 for live GitHub data.';
+    }
+    if (githubResult.data?.fallback) {
+      return 'Showing configured GitHub stats — live refresh unavailable. Set GITHUB_TOKEN in Vercel env (see .env.example) for commits, activity & repos.';
     }
     if (!githubResult.ok) {
       if (githubResult.reason === 'http-502' || githubResult.reason === 'http-503' || githubResult.reason === 'http-403') {
@@ -887,9 +1250,12 @@
   }
 
   async function loadAll(force = false) {
+    const ghFromCache = !force ? getCached('github') : null;
     const hadCache = !force && renderFromCache();
-    if (!hadCache) {
+    if (force || !ghFromCache) {
       showGitHubSkeletons();
+    }
+    if (force || !hadCache) {
       if (els.patentsGrid) els.patentsGrid.innerHTML = skeleton('<div class="patent-skeleton"></div>', 3);
     }
 
@@ -936,12 +1302,17 @@
 
     console.warn('Live data load failed:', githubResult.reason);
     showError();
+    startCountdown();
   }
+
+  renderLinkedIn(STATIC_CONFIG);
+  renderGitHubEmbed(buildGitHubFallback(STATIC_CONFIG));
 
   function bootLive() {
     initTabs();
     initPatentFilters();
     initMarqueePause();
+    initEmbedImageFallbacks();
     updateClock();
     setInterval(updateClock, 1000);
     els.refreshBtn?.addEventListener('click', () => loadAll(true));

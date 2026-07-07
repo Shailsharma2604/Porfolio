@@ -1,0 +1,195 @@
+{
+  "siteUrl": "https://shailsharma2604.vercel.app",
+  "availability": {
+    "enabled": true,
+    "badge": "Open to opportunities",
+    "roles": ["Full-time", "Collaborations"],
+    "startDate": "May 2026 or earlier",
+    "location": "Delhi NCR · Remote / hybrid OK"
+  },
+  "nowFocus": "Associate Data Engineer @ R Systems",
+  "latestUpdate": "Building production lakehouse pipelines on Databricks & Unity Catalog",
+  "stats": [
+    { "value": "2+", "label": "Years experience", "icon": "◈" },
+    { "value": "3", "label": "Patents granted", "icon": "🏅", "liveKey": "patentGranted" },
+    { "value": "51+", "label": "Projects shipped", "icon": "▣", "liveKey": "repoCount" },
+    { "value": "1", "label": "Certifications", "icon": "◆" },
+    { "value": "6", "label": "Total IP filings", "icon": "⚡", "liveKey": "patentTotal" }
+  ],
+  "experience": [
+    {
+      "date": "Oct 2025 — Present",
+      "title": "Associate Data Engineer",
+      "company": "R Systems International",
+      "badge": "Current",
+      "badgeClass": "exp-live",
+      "featured": true,
+      "description": "Data pipelines, analytics platforms, and scalable ETL with Databricks, Snowflake, and Unity Catalog.",
+      "bullets": [
+        "Building production lakehouse pipelines, GenAI upskilling, and scalable analytics for enterprise clients",
+        "Delta Live Tables, Unity Catalog governance, and Snowflake integration patterns"
+      ],
+      "tags": ["Databricks", "Spark", "ETL", "Snowflake"]
+    },
+    {
+      "date": "2023 — 2024",
+      "title": "UI/UX & Digital Marketing Intern",
+      "company": "Conceptou · Accerovic",
+      "badge": "Internship",
+      "description": "Brand visibility, user engagement, and product design across digital channels.",
+      "bullets": [
+        "Led UI/UX design workflows, content strategy, and digital campaigns",
+        "Improved brand reach and user engagement across client channels"
+      ],
+      "tags": ["UI/UX", "Marketing", "Figma"]
+    },
+    {
+      "date": "2022 — Present",
+      "title": "Co-Inventor & Patent Research",
+      "company": "Chitkara University · CURIN",
+      "badge": "Innovation",
+      "description": "Co-inventor on granted patents and filed applications through university research programs.",
+      "bullets": [
+        "3 granted patents — assistive headgear, integrated phone case, multifunctional cooling pad",
+        "6 total IP filings · CURIN patents registry · co-inventor workflows"
+      ],
+      "tags": ["Patents", "R&D", "Assistive Tech"]
+    },
+    {
+      "date": "2023",
+      "title": "Smart India Hackathon — Vizieye",
+      "company": "Team Lead · Data Visualization",
+      "badge": "Hackathon",
+      "description": "Hackathon-winning data visualization platform built for Smart India Hackathon & H.T.M. 5.0.",
+      "bullets": [
+        "Built Vizieye for speed, clarity, and team collaboration under competition pressure",
+        "Python data viz stack · pitched and demoed to national jury panels"
+      ],
+      "tags": ["Python", "Data Viz", "Hackathon"]
+    },
+    {
+      "date": "2022 — 2026",
+      "title": "B.E. CSE (Artificial Intelligence)",
+      "company": "Chitkara University · Final Year",
+      "badge": "Education",
+      "description": "Final-year undergraduate in CSE (AI) — Python, Java, C++, AI/ML, hackathons, and open-source work.",
+      "bullets": [
+        "Smart India Hackathon · H.T.M. 5.0 · 3 granted patents · CURIN research",
+        "Graduating May 2026 · AI/ML coursework and production-minded capstone work"
+      ],
+      "tags": ["AI/ML", "Python", "Research"]
+    }
+  ],
+  "milestones": [
+    {
+      "date": "Oct 2025",
+      "title": "Associate Data Engineer",
+      "subtitle": "R Systems International",
+      "type": "work"
+    },
+    {
+      "date": "2026",
+      "title": "Databricks Certified",
+      "subtitle": "Data Engineer Associate",
+      "type": "cert"
+    },
+    {
+      "date": "2024",
+      "title": "3 Patents Granted",
+      "subtitle": "Assistive headgear · phone case · cooling pad",
+      "type": "patent"
+    },
+    {
+      "date": "2023",
+      "title": "Smart India Hackathon",
+      "subtitle": "Vizieye — data visualization platform",
+      "type": "award"
+    },
+    {
+      "date": "2022",
+      "title": "B.E. CSE (AI)",
+      "subtitle": "Chitkara University · Final year",
+      "type": "edu"
+    }
+  ],
+  "learning": [
+    {
+      "topic": "Delta Live Tables & Lakeflow",
+      "context": "Production lakehouse pipelines @ R Systems",
+      "progress": 75
+    },
+    {
+      "topic": "Multi-Agent LLM Systems",
+      "context": "POC Planning Agent — 6-agent RAG pipeline",
+      "progress": 65
+    },
+    {
+      "topic": "Snowflake + Unity Catalog",
+      "context": "Enterprise data governance patterns",
+      "progress": 70
+    },
+    {
+      "topic": "GenAI for Data Engineering",
+      "context": "Databricks upskilling & automation",
+      "progress": 55
+    }
+  ],
+  "faq": [
+    {
+      "q": "Are you open to full-time roles?",
+      "a": "Yes — actively exploring full-time Data Engineer, ML Engineer, and AI Developer roles. Graduating May 2026; available for the right opportunity earlier."
+    },
+    {
+      "q": "What about contract or freelance work?",
+      "a": "Open to project-based collaborations and contract work in data engineering, AI/ML, and full-stack development."
+    },
+    {
+      "q": "Work authorization & location?",
+      "a": "Authorized to work in India. Based in Delhi NCR. Open to relocation within India and remote or hybrid arrangements."
+    },
+    {
+      "q": "Preferred start date?",
+      "a": "Flexible — May 2026 (post-graduation) or earlier for the right full-time role. Immediate for contract projects."
+    },
+    {
+      "q": "What roles are you targeting?",
+      "a": "Associate / Junior Data Engineer, ML Engineer, AI Developer, and analytics engineering roles. Strong fit for lakehouse, Spark, and LLM/RAG work."
+    },
+    {
+      "q": "How can I reach you quickly?",
+      "a": "Email shail020604@gmail.com, call +91 82888 51361, or message on LinkedIn. I typically respond within 24–48 hours."
+    }
+  ],
+  "resume": {
+    "path": "assets/resume.pdf",
+    "filename": "Shail_Sharma_Resume.pdf",
+    "lastUpdated": "Jul 2026"
+  },
+  "aboutContact": {
+    "role": "Associate Data Engineer",
+    "company": "R Systems International",
+    "education": "B.E. CSE (AI) · Final Year",
+    "location": "Delhi NCR",
+    "phone": "+91 82888 51361",
+    "email": "shail020604@gmail.com",
+    "linkedin": "https://www.linkedin.com/in/shail2604",
+    "linkedinHandle": "in/shail2604"
+  },
+  "certification": {
+    "name": "Databricks Certified Data Engineer Associate",
+    "year": "2026",
+    "verifyUrl": "https://credentials.databricks.com/26a22197-b2ed-4002-80a2-dae3b4abb0d8",
+    "directoryUrl": "https://directory.databrickscertified.com/profile/701279c0-04e0-4025-8ac4-6a8fea31f2d1"
+  },
+  "resumeSummary": {
+    "role": "Associate Data Engineer · R Systems International",
+    "education": "B.E. Computer Science (AI) · Chitkara University · May 2026",
+    "highlights": [
+      "3 granted patents — assistive tech, consumer devices & wearables · 6 total IP filings",
+      "Databricks Certified Data Engineer Associate (2026)",
+      "Production lakehouse pipelines · Spark · Unity Catalog · Snowflake",
+      "GitHub @Shailsharma2604 · Python · AI/ML · ETL"
+    ],
+    "skills": "Data Engineering · Databricks · Python · Apache Spark · AI/ML · SQL"
+  }
+}

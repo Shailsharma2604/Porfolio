@@ -64,33 +64,7 @@
     );
   }
 
-  /* ═══ Hero 3D avatar tilt — disabled (static profile photo) ═══ */
-  function initHeroTilt() {
-    /* Avatar tilt intentionally disabled */
-  }
-
-  /* ═══ Initial name decode on load ═══ */
-  function initHeroDecode() {
-    const el = $('#heroNameScramble');
-    if (!el || reduced) return;
-    const final = el.textContent.trim();
-    const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&';
-    const start = performance.now();
-    const duration = 900;
-
-    function frame(now) {
-      const p = Math.min((now - start) / duration, 1);
-      const revealed = Math.floor(final.length * p);
-      let out = final.slice(0, revealed);
-      for (let i = revealed; i < final.length; i++) {
-        out += CHARS[Math.floor(Math.random() * CHARS.length)];
-      }
-      el.textContent = out;
-      if (p < 1) requestAnimationFrame(frame);
-      else el.textContent = final;
-    }
-    requestAnimationFrame(frame);
-  }
+  /* Hero avatar — gentle scale via CSS only (no heavy 3D tilt) */
 
   /* ═══ Section divider draw-in ═══ */
   function initSectionDividers() {
@@ -489,19 +463,104 @@
   }
 
   /* ═══ Performance metrics widget ═══ */
+  const STATIC_PERF = { repos: '51+', followers: '10' };
+  const PERF_PENDING = '…';
+  const PERF_UNAVAILABLE = '—';
+
   function initPerfWidget() {
     const grid = $('#perfWidgetGrid');
     if (!grid) return;
 
-    const nav = performance.getEntriesByType('navigation')[0];
-    const loadMs = nav ? Math.round(nav.loadEventEnd - nav.startTime) : null;
-    const domMs = nav ? Math.round(nav.domContentLoadedEventEnd - nav.startTime) : null;
+    function getNavigationEntry() {
+      const nav = performance.getEntriesByType('navigation')[0];
+      if (nav) return nav;
+      if (performance.timing && performance.timing.navigationStart) {
+        return performance.timing;
+      }
+      return null;
+    }
+
+    function readNavTiming() {
+      const nav = getNavigationEntry();
+      if (!nav) return {};
+
+      const timing = {};
+      const start = nav.startTime ?? nav.navigationStart ?? 0;
+
+      const ttfb = nav.responseStart - (nav.requestStart ?? nav.fetchStart ?? start);
+      if (Number.isFinite(ttfb) && ttfb >= 0 && nav.responseStart > 0) {
+        timing.ttfbMs = Math.round(ttfb);
+      }
+
+      if (nav.domContentLoadedEventEnd > 0) {
+        timing.domMs = Math.round(nav.domContentLoadedEventEnd - start);
+      }
+
+      if (nav.loadEventEnd > 0) {
+        timing.loadMs = Math.round(nav.loadEventEnd - start);
+      }
+
+      return timing;
+    }
+
+    function formatPerfMs(ms) {
+      if (ms == null || !Number.isFinite(ms) || ms < 0) return null;
+      return `${Math.round(ms)}ms`;
+    }
+
+    function displayPerfValue(ms, pending) {
+      return formatPerfMs(ms) ?? (pending ? PERF_PENDING : PERF_UNAVAILABLE);
+    }
+
+    function applyNavMetrics(timing, pending) {
+      const loadEl = $('#perfLoad');
+      const ttfbEl = $('#perfTtfb');
+      const domEl = $('#perfDom');
+
+      if (loadEl) {
+        loadEl.textContent = displayPerfValue(timing.loadMs, pending);
+        loadEl.title =
+          timing.loadMs == null && !pending ? 'Page load timing unavailable in this browser context' : '';
+      }
+      if (ttfbEl) {
+        ttfbEl.textContent = displayPerfValue(timing.ttfbMs, pending);
+        ttfbEl.title =
+          timing.ttfbMs == null && !pending ? 'Navigation / TTFB timing unavailable in this browser context' : '';
+      }
+      if (domEl) {
+        domEl.textContent = displayPerfValue(timing.domMs, pending);
+        domEl.title =
+          timing.domMs == null && !pending ? 'DOMContentLoaded timing unavailable in this browser context' : '';
+      }
+    }
+
+    const initialTiming = readNavTiming();
+    const initialPending = document.readyState !== 'complete';
 
     const metrics = [
-      { icon: '⚡', label: 'Page load', value: loadMs ? `${loadMs}ms` : '—', sub: 'Navigation timing' },
-      { icon: '📄', label: 'DOM ready', value: domMs ? `${domMs}ms` : '—', sub: 'Content parsed' },
-      { icon: '📦', label: 'Repos', value: '—', sub: 'GitHub live', id: 'perfRepos' },
-      { icon: '👥', label: 'Followers', value: '—', sub: 'GitHub live', id: 'perfFollowers' },
+      {
+        icon: '⚡',
+        label: 'Page load',
+        value: displayPerfValue(initialTiming.loadMs, initialPending),
+        sub: 'Full page load',
+        id: 'perfLoad',
+      },
+      {
+        icon: '🌐',
+        label: 'TTFB',
+        value: displayPerfValue(initialTiming.ttfbMs, initialPending),
+        sub: 'Navigation timing',
+        id: 'perfTtfb',
+      },
+      {
+        icon: '📄',
+        label: 'DOM ready',
+        value: displayPerfValue(initialTiming.domMs, initialPending),
+        sub: 'DOMContentLoaded',
+        id: 'perfDom',
+      },
+      { icon: '📦', label: 'Repos', value: STATIC_PERF.repos, sub: 'GitHub live', id: 'perfRepos' },
+      { icon: '👥', label: 'Followers', value: STATIC_PERF.followers, sub: 'GitHub live', id: 'perfFollowers' },
     ];
 
     grid.innerHTML = metrics
@@ -516,24 +575,140 @@
       )
       .join('');
 
+    function refreshNavMetrics(pending) {
+      applyNavMetrics(readNavTiming(), pending);
+    }
+
+    function finalizeNavMetrics() {
+      // loadEventEnd can still be 0 synchronously on the load event in some browsers.
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          refreshNavMetrics(false);
+        });
+      });
+    }
+
+    if (document.readyState === 'complete') {
+      finalizeNavMetrics();
+    } else {
+      window.addEventListener('load', finalizeNavMetrics, { once: true });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener(
+        'DOMContentLoaded',
+        () => {
+          refreshNavMetrics(document.readyState !== 'complete');
+        },
+        { once: true }
+      );
+    }
+
+    let pendingPerf = null;
+
     window.portfolioUpdatePerf = (repos, followers) => {
       const r = $('#perfRepos');
       const f = $('#perfFollowers');
-      if (r) r.textContent = repos ?? '—';
-      if (f) f.textContent = followers ?? '—';
+      if (!r || !f) {
+        pendingPerf = [repos, followers];
+        return;
+      }
+      if (repos != null) r.textContent = `${repos}+`;
+      if (followers != null) f.textContent = String(followers);
     };
+
+    if (pendingPerf) {
+      window.portfolioUpdatePerf(pendingPerf[0], pendingPerf[1]);
+      pendingPerf = null;
+    }
   }
 
   /* ═══ Contact form ═══ */
   function initContactForm() {
     const form = $('#contactForm');
     const success = $('#contactSuccess');
+    const formError = $('#contactFormError');
     if (!form) return;
+
+    function clearFieldErrors() {
+      $$('.form-field', form).forEach((field) => {
+        field.classList.remove('has-error');
+        const err = $('.field-error', field);
+        if (err) err.textContent = '';
+      });
+    }
+
+    function hideFormError() {
+      if (!formError) return;
+      formError.hidden = true;
+      formError.textContent = '';
+    }
+
+    function showFormError(message) {
+      if (!formError) return;
+      formError.textContent = message;
+      formError.hidden = false;
+    }
+
+    function setFieldError(name, message) {
+      const input = form.elements[name];
+      if (!input) return;
+      const field = input.closest('.form-field');
+      if (!field) return;
+      field.classList.add('has-error');
+      let err = $('.field-error', field);
+      if (!err) {
+        err = document.createElement('span');
+        err.className = 'field-error';
+        err.setAttribute('role', 'alert');
+        field.appendChild(err);
+      }
+      err.textContent = message;
+      input.setAttribute('aria-invalid', 'true');
+    }
+
+    function validateForm(data) {
+      clearFieldErrors();
+      let valid = true;
+
+      if (!data.name || data.name.trim().length < 2) {
+        setFieldError('name', 'Please enter your name (at least 2 characters).');
+        valid = false;
+      }
+
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!data.email || !emailPattern.test(data.email.trim())) {
+        setFieldError('email', 'Please enter a valid email address.');
+        valid = false;
+      }
+
+      if (!data.message || data.message.trim().length < 10) {
+        setFieldError('message', 'Message should be at least 10 characters.');
+        valid = false;
+      }
+
+      return valid;
+    }
+
+    $$('input, textarea', form).forEach((input) => {
+      input.addEventListener('input', () => {
+        input.closest('.form-field')?.classList.remove('has-error');
+        input.removeAttribute('aria-invalid');
+      });
+    });
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const btn = $('button[type="submit"]', form);
       const data = Object.fromEntries(new FormData(form));
+
+      hideFormError();
+
+      if (!validateForm(data)) {
+        window.portfolioToast?.('Please fix the highlighted fields', 'error');
+        form.querySelector('.has-error input, .has-error textarea')?.focus();
+        return;
+      }
 
       btn.disabled = true;
       btn.textContent = 'Sending…';
@@ -544,34 +719,34 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data),
         });
-        const json = await res.json();
-        if (!res.ok) throw new Error(json.error || 'Failed');
+
+        let json = {};
+        try {
+          json = await res.json();
+        } catch {
+          throw new Error('Server returned an invalid response. Run npm start locally or deploy with /api/contact enabled.');
+        }
+
+        if (!res.ok) {
+          throw new Error(json.error || json.message || `Request failed (${res.status})`);
+        }
 
         form.hidden = true;
         success.hidden = false;
         success.classList.add('show');
         window.portfolioToast?.('Message sent — thanks for reaching out!', 'success');
-      } catch {
-        form.hidden = true;
-        success.hidden = false;
-        success.classList.add('show');
-        window.portfolioToast?.('Message received locally — email copied as backup', 'success');
+      } catch (err) {
+        const message = err?.message || 'Could not send your message.';
+        const isNetworkError = err instanceof TypeError && /fetch|network/i.test(String(err.message || err));
+        const hint = isNetworkError
+          ? ' Start the server with npm start, or email directly.'
+          : ' You can also email shail020604@gmail.com directly.';
+        showFormError(message + hint);
+        window.portfolioToast?.(message, 'error');
       } finally {
         btn.disabled = false;
         btn.textContent = 'Send message';
       }
-    });
-  }
-
-  /* ═══ Project card 3D flip on hover (desktop) ═══ */
-  function initProjectFlip() {
-    if (reduced || mobile) return;
-    $$('#projectsGrid .project-card:not(.project-cta-card)').forEach((card) => {
-      card.classList.add('project-flip-card');
-      const inner = document.createElement('div');
-      inner.className = 'project-flip-inner';
-      while (card.firstChild) inner.appendChild(card.firstChild);
-      card.appendChild(inner);
     });
   }
 
@@ -601,8 +776,6 @@
   scheduleIdle(() => {
     initCodeSnippets();
     initParallax();
-    initHeroDecode();
     initSkillRadar();
-    initProjectFlip();
   }, 1800);
 })();

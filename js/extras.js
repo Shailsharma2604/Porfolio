@@ -4,173 +4,7 @@
 
   const toast = (msg, type) => window.portfolioToast?.(msg, type);
 
-  /* ─── Cursor spotlight (deferred, desktop only) ─── */
-  const spotlight = $('#cursorSpotlight');
-  if (spotlight && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-    const startSpotlight = () => {
-      let sx = 0;
-      let sy = 0;
-      let tx = 0;
-      let ty = 0;
-      let spotRunning = false;
-      document.addEventListener(
-        'mousemove',
-        (e) => {
-          tx = e.clientX;
-          ty = e.clientY;
-          if (!spotRunning) {
-            spotRunning = true;
-            tickSpotlight();
-          }
-        },
-        { passive: true }
-      );
-      function tickSpotlight() {
-        const dx = tx - sx;
-        const dy = ty - sy;
-        if (Math.abs(dx) < 0.5 && Math.abs(dy) < 0.5) {
-          spotRunning = false;
-          return;
-        }
-        sx += dx * 0.08;
-        sy += dy * 0.08;
-        spotlight.style.setProperty('--spot-x', `${sx}px`);
-        spotlight.style.setProperty('--spot-y', `${sy}px`);
-        requestAnimationFrame(tickSpotlight);
-      }
-    };
-    if ('requestIdleCallback' in window) requestIdleCallback(startSpotlight, { timeout: 2500 });
-    else setTimeout(startSpotlight, 500);
-  }
-
-  /* ─── Name scramble ─── */
-  const scrambleEl = $('#heroNameScramble');
-  const ORIGINAL = 'Sharma';
-  const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&';
-
-  function scrambleText(el, final, duration = 600) {
-    if (!el || el.dataset.scrambling === '1') return;
-    el.dataset.scrambling = '1';
-    const start = performance.now();
-    function frame(now) {
-      const p = Math.min((now - start) / duration, 1);
-      const revealed = Math.floor(final.length * p);
-      let out = final.slice(0, revealed);
-      for (let i = revealed; i < final.length; i++) {
-        out += CHARS[Math.floor(Math.random() * CHARS.length)];
-      }
-      el.textContent = out;
-      if (p < 1) requestAnimationFrame(frame);
-      else {
-        el.textContent = final;
-        el.dataset.scrambling = '0';
-      }
-    }
-    requestAnimationFrame(frame);
-  }
-
-  scrambleEl?.addEventListener('dblclick', () => scrambleText(scrambleEl, ORIGINAL));
-
-  /* ─── Experience expand ─── */
-  $$('.exp-expandable').forEach((card) => {
-    const toggle = () => {
-      const wasOpen = card.classList.contains('expanded');
-      $$('.exp-expandable').forEach((c) => c.classList.remove('expanded'));
-      if (!wasOpen) card.classList.add('expanded');
-    };
-    card.addEventListener('click', toggle);
-    card.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        toggle();
-      }
-    });
-  });
-
-  /* ─── Scroll achievements ─── */
-  const ACHIEVEMENTS = {
-    patents: { icon: '🏅', title: 'Innovator', desc: 'Discovered the patents section' },
-    activity: { icon: '⚡', title: 'Live Wire', desc: 'Opened the live dashboard' },
-    projects: { icon: '▣', title: 'Builder', desc: 'Explored the projects gallery' },
-    contact: { icon: '✉', title: 'Let\'s Talk', desc: 'Found the contact section' },
-    skills: { icon: '◆', title: 'Stack Master', desc: 'Checked out the skill meters' },
-    writing: { icon: '✎', title: 'Reader', desc: 'Found the writing section' },
-    devshell: { icon: '>_', title: 'Shell Explorer', desc: 'Discovered the dev shell' },
-  };
-
-  const unlocked = new Set(JSON.parse(localStorage.getItem('portfolio-achievements') || '[]'));
-  const tray = $('#achievementsTray');
-
-  function showAchievement(key) {
-    if (unlocked.has(key)) return;
-    const a = ACHIEVEMENTS[key];
-    if (!a || !tray) return;
-    unlocked.add(key);
-    localStorage.setItem('portfolio-achievements', JSON.stringify([...unlocked]));
-
-    const el = document.createElement('div');
-    el.className = 'achievement-pop';
-    el.innerHTML = `<span class="achievement-icon">${a.icon}</span><div><strong>${a.title}</strong><p>${a.desc}</p></div>`;
-    tray.appendChild(el);
-    requestAnimationFrame(() => el.classList.add('show'));
-    setTimeout(() => {
-      el.classList.remove('show');
-      setTimeout(() => el.remove(), 400);
-    }, 3200);
-  }
-
-  Object.keys(ACHIEVEMENTS).forEach((id) => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) showAchievement(id);
-      },
-      { threshold: 0.4 }
-    ).observe(el);
-  });
-
-  /* ─── Konami code → acid theme ─── */
-  const KONAMI = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
-  let konamiIdx = 0;
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === KONAMI[konamiIdx]) {
-      konamiIdx += 1;
-      if (konamiIdx === KONAMI.length) {
-        konamiIdx = 0;
-        document.documentElement.dataset.accent = 'acid';
-        try {
-          const s = JSON.parse(localStorage.getItem('portfolio-theme') || '{}');
-          s.accent = 'acid';
-          localStorage.setItem('portfolio-theme', JSON.stringify(s));
-        } catch {}
-        toast('🎮 Acid mode unlocked!', 'success');
-        burstConfetti(window.innerWidth / 2, window.innerHeight / 2);
-      }
-    } else {
-      konamiIdx = e.key === KONAMI[0] ? 1 : 0;
-    }
-  });
-
-  /* ─── Confetti ─── */
-  function burstConfetti(x, y, n = 40) {
-    const colors = ['#8b5cf6', '#22d3ee', '#f472b6', '#fcd34d', '#34d399'];
-    for (let i = 0; i < n; i++) {
-      const p = document.createElement('span');
-      p.className = 'confetti-particle';
-      p.style.left = `${x}px`;
-      p.style.top = `${y}px`;
-      p.style.background = colors[i % colors.length];
-      p.style.setProperty('--dx', `${(Math.random() - 0.5) * 280}px`);
-      p.style.setProperty('--dy', `${-80 - Math.random() * 200}px`);
-      p.style.setProperty('--rot', `${Math.random() * 720}deg`);
-      document.body.appendChild(p);
-      setTimeout(() => p.remove(), 1200);
-    }
-  }
-
-  /* ─── Terminal ─── */
+  /* ─── Terminal (hidden from UI) ─── */
   const terminalWrap = $('#terminalWrap');
   const terminalBody = $('#terminalBody');
   const terminalInput = $('#terminalInput');
@@ -187,7 +21,9 @@
   <span class="t-cmd">skills</span>     tech stack summary
   <span class="t-cmd">patents</span>    patent stats
   <span class="t-cmd">experience</span> work history
+  <span class="t-cmd">projects</span>   featured builds
   <span class="t-cmd">contact</span>    email & phone
+  <span class="t-cmd">resume</span>     download PDF resume
   <span class="t-cmd">social</span>     profile links
   <span class="t-cmd">github</span>     open GitHub
   <span class="t-cmd">theme</span>      open theme panel
@@ -217,22 +53,51 @@ Azure ███████░░░ 75%`;
         return `Patents: ${d.grantedCount} granted · ${d.filedCount} filed · ${d.count} total
 Registry: curin.chitkara.edu.in/patents-granted/`;
       } catch {
-        return '3 granted · 6 filed · 9 total (offline estimate)';
+        return '3 granted · 3 filed · 6 total (offline estimate)';
       }
     },
     experience() {
-      return `Oct 2025 — Present  Associate Data Engineer @ R Systems
-2023 — 2024           UI/UX & Marketing @ Conceptou · Accerovic
-2022 — 2026           B.E. CSE (AI) @ Chitkara University`;
+      const items = window.portfolioSiteConfig?.experience;
+      if (items?.length) {
+        return items
+          .map((exp) => `${exp.date.padEnd(22)} ${exp.title} @ ${exp.company.split(' · ')[0]}`)
+          .join('\n');
+      }
+      return `Oct 2025 — Present   Associate Data Engineer @ R Systems
+2023 — 2024            UI/UX Intern @ Conceptou · Accerovic
+2022 — Present         Co-Inventor @ Chitkara · CURIN
+2023                   Smart India Hackathon — Vizieye
+2022 — 2026            B.E. CSE (AI) @ Chitkara University`;
+    },
+    projects() {
+      return `Vizieye — Smart India Hackathon data viz platform
+POC Planning Agent — 6-agent LLM RAG pipeline
+TrendPredict — ML market trend dashboard
+Paper Vision AR — augmented reality web + CV
+Type goto projects to scroll the gallery`;
     },
     contact() {
       return `Email: shail020604@gmail.com
 Phone: +91 82888 51361
-LinkedIn: in/shail-sharma-607175250`;
+LinkedIn: in/shail2604`;
+    },
+    resume() {
+      const cfg = window.portfolioSiteConfig?.resume;
+      const path = cfg?.path || 'assets/resume.pdf';
+      const filename = cfg?.filename || 'Shail_Sharma_Resume.pdf';
+      const a = document.createElement('a');
+      a.href = path;
+      a.download = filename;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      return `Downloading ${filename}…`;
     },
     social() {
       return `GitHub    github.com/Shailsharma2604
-LinkedIn  in.linkedin.com/in/shail-sharma-607175250
+LinkedIn  www.linkedin.com/in/shail2604
 Kaggle    kaggle.com/shail2604
 ORCID     orcid.org/0009-0005-6101-1998
 Databricks directory profile linked on site`;
@@ -252,7 +117,7 @@ Databricks directory profile linked on site`;
       const el = document.getElementById(id);
       if (!el) return `Unknown section: ${args[0]}`;
       closeTerminal();
-      el.scrollIntoView({ behavior: 'smooth' });
+      window.portfolioSmoothScroll?.(el) ?? el.scrollIntoView({ behavior: 'smooth' });
       return `Navigating to #${id}…`;
     },
     clear() {
@@ -260,13 +125,10 @@ Databricks directory profile linked on site`;
       return null;
     },
     stats() {
-      return `Sections explored: ${unlocked.size}/${Object.keys(ACHIEVEMENTS).length}
-Achievements: ${[...unlocked].join(', ') || 'none yet'}
-Theme: ${document.documentElement.dataset.accent || 'violet'} · ${document.documentElement.dataset.mode || 'dark'}`;
+      return `Theme: ${document.documentElement.dataset.accent || 'violet'} · ${document.documentElement.dataset.mode || 'dark'}`;
     },
     sudo(args) {
       if (args.join(' ') === 'hire me') {
-        burstConfetti(window.innerWidth / 2, window.innerHeight / 2, 60);
         return '🎉 Permission granted. Let\'s build something great together!';
       }
       return 'sudo: command not found';
@@ -361,11 +223,65 @@ Theme: ${document.documentElement.dataset.accent || 'violet'} · ${document.docu
     }
   });
 
-  /* ─── Click ripple on primary buttons ─── */
-  $$('.btn-primary, .btn-magnetic').forEach((btn) => {
+  /* ─── Click ripple on buttons ─── */
+  $$('.btn-primary, .btn-glass, .btn-linkedin, .nav-cta, .contact-email, .contact-phone, .contact-linkedin').forEach((btn) => {
+    if (btn.style.position !== 'relative') {
+      btn.style.position = 'relative';
+      btn.style.overflow = 'hidden';
+    }
     btn.addEventListener('click', (e) => {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const ripple = document.createElement('span');
+      ripple.className = 'ripple';
       const rect = btn.getBoundingClientRect();
-      burstConfetti(rect.left + rect.width / 2, rect.top + rect.height / 2, 12);
+      const size = Math.max(rect.width, rect.height);
+      ripple.style.width = ripple.style.height = `${size}px`;
+      ripple.style.left = `${e.clientX - rect.left - size / 2}px`;
+      ripple.style.top = `${e.clientY - rect.top - size / 2}px`;
+      btn.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 650);
     });
+  });
+
+  /* ─── Quick contact FAB ─── */
+  const contactFabToggle = $('#contactFabToggle');
+  const contactFabMenu = $('#contactFabMenu');
+
+  function closeContactFab() {
+    contactFabToggle?.setAttribute('aria-expanded', 'false');
+    contactFabMenu?.setAttribute('hidden', '');
+  }
+
+  contactFabToggle?.addEventListener('click', () => {
+    const open = contactFabToggle.getAttribute('aria-expanded') === 'true';
+    contactFabToggle.setAttribute('aria-expanded', open ? 'false' : 'true');
+    if (open) contactFabMenu?.setAttribute('hidden', '');
+    else contactFabMenu?.removeAttribute('hidden');
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('#contactFabWrap')) closeContactFab();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeContactFab();
+  });
+
+  $('#sharePortfolioFab')?.addEventListener('click', () => {
+    closeContactFab();
+    window.portfolioShare?.(false);
+  });
+
+  $('#sharePortfolioHero')?.addEventListener('click', () => {
+    window.portfolioShare?.(false);
+  });
+
+  $('#downloadVcardFab')?.addEventListener('click', () => {
+    closeContactFab();
+    window.portfolioDownloadVCard?.();
+  });
+
+  $('#downloadVcardBtn')?.addEventListener('click', () => {
+    window.portfolioDownloadVCard?.();
   });
 })();

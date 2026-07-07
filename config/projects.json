@@ -1,0 +1,16 @@
+{
+  "caseStudies": {
+    "vizieye": {
+      "problem": "Smart India Hackathon teams needed to explore datasets, build charts, and present insights under tight deadlines — without wrestling with fragmented tools or slow iteration cycles.",
+      "solution": "Led development of Vizieye, a Python data visualization platform focused on speed, clarity, and team collaboration. Built for SIH & H.T.M. 5.0 with a workflow tuned for rapid exploration and demo-ready outputs.",
+      "stack": ["Python", "Data Visualization", "Collaborative UX", "Hackathon tooling"],
+      "impact": "Team Lead on a hackathon-winning platform — pitched and demoed to national jury panels under competition pressure."
+    },
+    "lakehouse": {
+      "problem": "Enterprise analytics teams needed governed, scalable pipelines that bridge raw ingestion with trusted analytics — without siloed data or brittle ETL.",
+      "solution": "Design and build production lakehouse pipelines at R Systems using Databricks, Delta Live Tables, Unity Catalog, and Snowflake integration patterns for enterprise clients.",
+      "stack": ["Databricks", "Apache Spark", "Delta Live Tables", "Unity Catalog", "Snowflake", "ETL"],
+      "impact": "Delivering production-grade lakehouse architecture with governance-first data modeling — current role focus since Oct 2025."
+    }
+  }
+}

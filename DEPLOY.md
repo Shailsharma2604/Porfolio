@@ -36,6 +36,8 @@ git push -u origin main
 |-----|--------|
 | `GITHUB_TOKEN` | GitHub PAT (no scopes) — [create token](https://github.com/settings/tokens) |
 | `GITHUB_USERNAME` | `Shailsharma2604` |
+| `RESEND_API_KEY` | [Resend](https://resend.com) API key — **required for contact form email** |
+| `CONTACT_TO_EMAIL` | Inbox for form messages (default: `shail020604@gmail.com`) |
 
 6. Click **Deploy**
 
@@ -82,6 +84,7 @@ npm run vercel:dev
 | Holopin / LinkedIn | Yes |
 | Resume download | Yes (`assets/resume.pdf`) |
 | Theme switcher | Yes |
+| Contact form email | Yes (`/api/contact` → Gmail via Resend Send API; see [CONTACT_FORM.md](CONTACT_FORM.md)) |
 
 ---
 

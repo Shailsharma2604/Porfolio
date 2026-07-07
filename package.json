@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
+    "build": "node --check js/main.js && node --check js/site-content.js && node --check js/live.js && node --check js/interactive.js && node --check js/extras.js && node --check js/nextlevel.js && node --check js/speed-insights.js",
     "vercel:dev": "vercel dev"
   },
   "engines": {

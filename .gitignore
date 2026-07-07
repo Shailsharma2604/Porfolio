@@ -1,3 +1,7 @@
 node_modules/
 .env
 *.log
+
+# Agent-generated QA screenshots & temp audit scripts (not part of the site)
+_*.png
+_audit*.js

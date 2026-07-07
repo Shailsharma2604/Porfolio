@@ -6,18 +6,21 @@
     { id: 'home', label: 'Home', icon: '⌂' },
     { id: 'about', label: 'About', icon: '◉' },
     { id: 'experience', label: 'Experience', icon: '◈' },
+    { id: 'milestones', label: 'Milestones', icon: '★' },
     { id: 'skills', label: 'Skills', icon: '◆' },
     { id: 'projects', label: 'Projects', icon: '▣' },
     { id: 'patents', label: 'Patents', icon: '🏅' },
-    { id: 'activity', label: 'Live Dashboard', icon: '⚡' },
+    { id: 'activity', label: 'Activity', icon: '⚡' },
     { id: 'writing', label: 'Writing', icon: '✎' },
     { id: 'certifications', label: 'Certifications', icon: '✓' },
+    { id: 'learning', label: 'Learning', icon: '📚' },
+    { id: 'faq', label: 'FAQ', icon: '?' },
     { id: 'contact', label: 'Contact', icon: '✉' },
   ];
 
   const LINKS = [
     { label: 'GitHub Profile', url: 'https://github.com/Shailsharma2604', icon: 'GH', group: 'Links' },
-    { label: 'LinkedIn', url: 'https://in.linkedin.com/in/shail-sharma-607175250', icon: 'in', group: 'Links' },
+    { label: 'LinkedIn', url: 'https://www.linkedin.com/in/shail2604', icon: 'in', group: 'Links' },
     { label: 'Databricks Directory', url: 'https://directory.databrickscertified.com/profile/701279c0-04e0-4025-8ac4-6a8fea31f2d1', icon: '◆', group: 'Links' },
     { label: 'Kaggle', url: 'https://www.kaggle.com/shail2604', icon: 'K', group: 'Links' },
     { label: 'ORCID', url: 'https://orcid.org/0009-0005-6101-1998', icon: 'ID', group: 'Links' },
@@ -25,9 +28,25 @@
     { label: 'Download Resume', url: 'assets/resume.pdf', icon: '↓', group: 'Links' },
   ];
 
+  const VCARD = `BEGIN:VCARD
+VERSION:3.0
+FN:Shail Sharma
+N:Sharma;Shail;;;
+TITLE:Associate Data Engineer
+ORG:R Systems International
+EMAIL;TYPE=INTERNET:shail020604@gmail.com
+TEL;TYPE=CELL:+918288851361
+URL:https://www.linkedin.com/in/shail2604
+NOTE:Portfolio — Data Engineer & AI Developer. 3 granted patents. Databricks Certified.
+END:VCARD`;
+
   const ACTIONS = [
     { label: 'Copy email', action: 'copy-email', icon: '⎘', group: 'Actions' },
     { label: 'Copy phone', action: 'copy-phone', icon: '⎘', group: 'Actions' },
+    { label: 'Share portfolio link', action: 'share', icon: '↗', group: 'Actions' },
+    { label: 'Share on LinkedIn', action: 'share-linkedin', icon: 'in', group: 'Actions' },
+    { label: 'Download vCard', action: 'vcard', icon: '↓', group: 'Actions' },
+    { label: 'Keyboard shortcuts', action: 'shortcuts', icon: '?', group: 'Actions' },
     { label: 'Open theme panel', action: 'theme', icon: '◐', group: 'Actions' },
     { label: 'Open terminal', action: 'terminal', icon: '>_', group: 'Actions' },
     { label: 'Refresh live data', action: 'refresh', icon: '↻', group: 'Actions' },
@@ -37,6 +56,32 @@
   let gKeyPending = false;
   let gKeyTimer = null;
   let projectFilter = 'all';
+  let projectSearch = '';
+
+  /* ─── Smooth scroll for in-page anchors ─── */
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function smoothScrollTo(el) {
+    if (!el) return;
+    window.portfolioCloseNav?.();
+    const offset = window.portfolioScrollOffset?.() ?? (document.getElementById('nav')?.offsetHeight || 56) + 8;
+    const top = el.getBoundingClientRect().top + window.scrollY - offset;
+    window.scrollTo({ top: Math.max(0, top), behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+    requestAnimationFrame(() => window.portfolioUpdateActiveNav?.());
+  }
+
+  window.portfolioSmoothScroll = smoothScrollTo;
+
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('a[href^="#"]');
+    if (!link || link.getAttribute('href') === '#') return;
+    const id = link.getAttribute('href').slice(1);
+    const target = document.getElementById(id);
+    if (!target) return;
+    e.preventDefault();
+    smoothScrollTo(target);
+    history.replaceState(null, '', `#${id}`);
+  });
 
   /* ─── Toast ─── */
   function toast(msg, type = 'default') {
@@ -56,6 +101,42 @@
       toast('Could not copy — try manually', 'error');
     }
   }
+
+  function downloadVCard() {
+    const blob = new Blob([VCARD], { type: 'text/vcard;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'Shail-Sharma.vcf';
+    a.click();
+    URL.revokeObjectURL(url);
+    toast('vCard downloaded', 'success');
+  }
+
+  async function sharePortfolio(openLinkedIn = false) {
+    const url = window.location.href.replace(/#.*$/, '');
+    const title = 'Shail Sharma — Data Engineer & AI Developer';
+    if (openLinkedIn) {
+      window.open(
+        `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
+        '_blank',
+        'noopener,noreferrer'
+      );
+      return;
+    }
+    if (navigator.share) {
+      try {
+        await navigator.share({ title, url });
+        return;
+      } catch (err) {
+        if (err.name === 'AbortError') return;
+      }
+    }
+    await copyText(url, 'Portfolio link');
+  }
+
+  window.portfolioShare = sharePortfolio;
+  window.portfolioDownloadVCard = downloadVCard;
 
   /* ─── Command palette ─── */
   const cmdPalette = $('#cmdPalette');
@@ -111,10 +192,12 @@
     const type = btn.dataset.type;
     if (type === 'section') {
       closeCmd();
-      document.getElementById(btn.dataset.id)?.scrollIntoView({ behavior: 'smooth' });
+      const el = document.getElementById(btn.dataset.id);
+      smoothScrollTo(el);
+      if (el) history.replaceState(null, '', `#${btn.dataset.id}`);
     } else if (type === 'link') {
       closeCmd();
-      window.open(btn.dataset.url, btn.dataset.url.startsWith('assets/') ? '_blank' : '_blank');
+      window.open(btn.dataset.url, '_blank', 'noopener,noreferrer');
     } else if (type === 'action') {
       closeCmd();
       runAction(btn.dataset.action);
@@ -124,18 +207,23 @@
   function runAction(action) {
     if (action === 'copy-email') copyText('shail020604@gmail.com', 'Email');
     if (action === 'copy-phone') copyText('+918288851361', 'Phone');
+    if (action === 'share') sharePortfolio(false);
+    if (action === 'share-linkedin') sharePortfolio(true);
+    if (action === 'vcard') downloadVCard();
+    if (action === 'shortcuts') openShortcuts();
     if (action === 'theme') $('#themeFab')?.click();
     if (action === 'terminal') window.portfolioOpenTerminal?.();
     if (action === 'refresh') $('#refreshLiveBtn')?.click();
   }
 
   function openCmd() {
+    window.portfolioCloseNav?.();
     cmdPalette?.removeAttribute('hidden');
     cmdOverlay?.removeAttribute('hidden');
     cmdPalette?.classList.add('open');
     cmdOverlay?.classList.add('visible');
     renderCommands('');
-    cmdInput.value = '';
+    if (cmdInput) cmdInput.value = '';
     setTimeout(() => cmdInput?.focus(), 50);
     document.body.classList.add('modal-open');
   }
@@ -184,6 +272,7 @@
     shortcutsOverlay?.removeAttribute('hidden');
     shortcutsPanel?.classList.add('open');
     shortcutsOverlay?.classList.add('visible');
+    document.body.classList.add('modal-open');
   }
 
   function closeShortcuts() {
@@ -191,68 +280,40 @@
     shortcutsOverlay?.classList.remove('visible');
     shortcutsPanel?.setAttribute('hidden', '');
     shortcutsOverlay?.setAttribute('hidden', '');
+    document.body.classList.remove('modal-open');
   }
 
   shortcutsOverlay?.addEventListener('click', closeShortcuts);
   $('#shortcutsClose')?.addEventListener('click', closeShortcuts);
 
-  document.addEventListener('keydown', (e) => {
-    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-      e.preventDefault();
-      cmdPalette?.classList.contains('open') ? closeCmd() : openCmd();
-      return;
-    }
-    if (e.key === '?' && !e.target.matches('input, textarea')) {
-      e.preventDefault();
-      shortcutsPanel?.classList.contains('open') ? closeShortcuts() : openShortcuts();
-      return;
-    }
-    if (e.key === 'Escape') {
-      closeCmd();
-      closeShortcuts();
-      closeProjectModal();
-      return;
-    }
-    if (e.target.matches('input, textarea') || cmdPalette?.classList.contains('open')) return;
-
-    if (e.key === 't' || e.key === 'T') {
-      $('#themeFab')?.click();
-    }
-    if (e.key === 'r' || e.key === 'R') {
-      $('#refreshLiveBtn')?.click();
-      toast('Refreshing live data…', 'default');
-    }
-
-    if (e.key === 'g' || e.key === 'G') {
-      gKeyPending = true;
-      clearTimeout(gKeyTimer);
-      gKeyTimer = setTimeout(() => (gKeyPending = false), 1200);
-      return;
-    }
-    if (gKeyPending) {
-      gKeyPending = false;
-      const map = { h: 'home', p: 'projects', l: 'activity', c: 'contact', a: 'about' };
-      const id = map[e.key.toLowerCase()];
-      if (id) document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-    }
-  });
-
-  /* ─── Section dots ─── */
+  /* ─── Section dots (mobile / tablet) ─── */
   const sectionDots = $('#sectionDots');
   if (sectionDots) {
     sectionDots.innerHTML = SECTIONS.map(
-      (s) => `<a href="#${s.id}" class="section-dot" data-section="${s.id}" title="${s.label}"><span class="section-dot-label">${s.label}</span></a>`
+      (s) =>
+        `<a href="#${s.id}" class="section-dot" data-section="${s.id}" title="${s.label}"><span class="section-dot-label">${s.label}</span></a>`
     ).join('');
+
+    sectionDots.querySelectorAll('.section-dot').forEach((dot) => {
+      dot.addEventListener('click', (e) => {
+        e.preventDefault();
+        const el = document.getElementById(dot.dataset.section);
+        smoothScrollTo(el);
+        history.replaceState(null, '', `#${dot.dataset.section}`);
+      });
+    });
 
     const dotObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            $$('.section-dot').forEach((d) => d.classList.toggle('active', d.dataset.section === entry.target.id));
+            $$('.section-dot').forEach((d) =>
+              d.classList.toggle('active', d.dataset.section === entry.target.id)
+            );
           }
         });
       },
-      { threshold: 0.35, rootMargin: '-72px 0px -55% 0px' }
+      { threshold: 0.35, rootMargin: '-80px 0px -55% 0px' }
     );
     SECTIONS.forEach((s) => {
       const el = document.getElementById(s.id);
@@ -260,21 +321,36 @@
     });
   }
 
-  /* ─── Project filters ─── */
+  /* ─── Filter tabs (simple active state, no sliding indicator) ─── */
+  window.portfolioSyncFilterIndicator = () => {};
+
+  /* ─── Project filters + search ─── */
   function filterProjects() {
+    const q = projectSearch.trim().toLowerCase();
+    let visibleCount = 0;
+
     $$('#projectsGrid .project-card').forEach((card) => {
       if (card.dataset.noModal !== undefined) {
-        card.style.display = '';
+        card.style.display = q ? 'none' : '';
         return;
       }
+
       const tags = card.dataset.tags || '';
-      const show = projectFilter === 'all' || tags.includes(projectFilter);
+      const text = card.textContent.replace(/\s+/g, ' ').trim().toLowerCase();
+      const tagMatch = projectFilter === 'all' || tags.includes(projectFilter);
+      const searchMatch = !q || text.includes(q);
+      const show = tagMatch && searchMatch;
+
       card.style.display = show ? '' : 'none';
       if (show) {
+        visibleCount += 1;
         card.classList.remove('filter-out');
         card.classList.add('filter-in');
       }
     });
+
+    const emptyEl = $('#projectsEmpty');
+    if (emptyEl) emptyEl.hidden = visibleCount > 0;
   }
 
   $$('.project-filter').forEach((btn) => {
@@ -286,77 +362,79 @@
     });
   });
 
-  /* ─── Project modal ─── */
-  const projectModal = $('#projectModal');
-  const projectModalBackdrop = $('#projectModalBackdrop');
+  const projectSearchInput = $('#projectSearch');
+  projectSearchInput?.addEventListener('input', (e) => {
+    projectSearch = e.target.value;
+    filterProjects();
+  });
 
-  function openProjectModal(card) {
-    if (card.dataset.noModal !== undefined) return;
-    const title = $('h3', card)?.textContent || 'Project';
-    const desc = $('p', card)?.textContent || '';
-    const id = $('.project-id', card)?.textContent || '';
-    const chips = $$('.project-chips span', card).map((c) => c.textContent);
-    const gh = card.dataset.github || $('a.project-link', card)?.href;
-
-    $('#projectModalTitle').textContent = title;
-    $('#projectModalDesc').textContent = desc;
-    $('#projectModalId').textContent = id;
-    $('#projectModalChips').innerHTML = chips.map((c) => `<span>${c}</span>`).join('');
-
-    const ghBtn = $('#projectModalGithub');
-    if (gh && ghBtn) {
-      ghBtn.href = gh;
-      ghBtn.hidden = false;
-    } else if (ghBtn) {
-      ghBtn.hidden = true;
+  projectSearchInput?.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      projectSearchInput.value = '';
+      projectSearch = '';
+      filterProjects();
+      projectSearchInput.blur();
     }
-
-    projectModal?.removeAttribute('hidden');
-    projectModal?.classList.add('open');
-    document.body.classList.add('modal-open');
-  }
-
-  function closeProjectModal() {
-    projectModal?.classList.remove('open');
-    projectModal?.setAttribute('hidden', '');
-    document.body.classList.remove('modal-open');
-  }
-
-  projectModalBackdrop?.addEventListener('click', closeProjectModal);
-  $('#projectModalClose')?.addEventListener('click', closeProjectModal);
-  $('#projectModalDismiss')?.addEventListener('click', closeProjectModal);
-
-  $$('#projectsGrid .project-card').forEach((card) => {
-    card.addEventListener('click', (e) => {
-      if (e.target.closest('a')) return;
-      openProjectModal(card);
-    });
-    card.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        openProjectModal(card);
-      }
-    });
   });
 
-  /* ─── Copy buttons ─── */
-  $$('.copy-btn').forEach((btn) => {
-    btn.addEventListener('click', () => copyText(btn.dataset.copy, btn.dataset.label));
-  });
+  /* ─── Stack chip tooltips (desktop hover only) ─── */
+  const CHIP_TIPS = {
+    Databricks: 'Production lakehouse pipelines & Unity Catalog @ R Systems',
+    'Apache Spark': 'Distributed ETL, streaming & batch processing',
+    Snowflake: 'Cloud data warehouse & analytics workloads',
+    SQL: 'Dimensional modeling, Snowflake & Unity Catalog',
+    'Unity Catalog': 'Governance, lineage & access control on Databricks',
+    'ETL Pipelines': 'Production-grade ingestion & transformation patterns',
+    'Power BI': 'Enterprise dashboards & self-service analytics',
+    Azure: 'Cloud data services, deployment & integration',
+    Python: 'Daily driver — ML, ETL, automation & scripting',
+    Java: 'OOP, enterprise patterns & academic projects',
+    'C++': 'Systems programming & algorithms',
+    JavaScript: 'Web apps, dashboards & interactive UIs',
+    TensorFlow: 'Deep learning models & computer vision',
+    'Scikit-learn': 'Classical ML, feature engineering & evaluation',
+    'OpenAI / LLMs': 'Multi-agent systems, RAG & prompt engineering',
+    'RAG · ChromaDB': 'Retrieval-augmented generation with vector stores',
+    'Multi-Agent': 'Orchestrated LLM agents for POC planning',
+    React: 'Component-based UIs, dashboards & portfolios',
+    Flask: 'Lightweight Python APIs & ML serving',
+    Streamlit: 'Rapid ML/AI app prototyping & demos',
+    GitHub: 'Open source, CI/CD & collaboration',
+    Figma: 'UI/UX design & product prototyping',
+  };
 
-  /* ─── Cert flip ─── */
-  $$('.cert-flip-wrap').forEach((wrap) => {
-    const flip = () => wrap.querySelector('.cert-flip')?.classList.toggle('flipped');
-    wrap.addEventListener('click', (e) => {
-      if (e.target.closest('a')) return;
-      flip();
-    });
-    wrap.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        flip();
-      }
-    });
+  let chipTipEl = null;
+  function showChipTip(chip, text) {
+    if (!text) return;
+    if (!chipTipEl) {
+      chipTipEl = document.createElement('div');
+      chipTipEl.className = 'chip-tooltip';
+      chipTipEl.setAttribute('role', 'tooltip');
+      document.body.appendChild(chipTipEl);
+    }
+    chipTipEl.textContent = text;
+    const rect = chip.getBoundingClientRect();
+    chipTipEl.style.left = `${rect.left + rect.width / 2}px`;
+    chipTipEl.style.top = `${rect.top - 8}px`;
+    chipTipEl.classList.add('visible');
+  }
+
+  function hideChipTip() {
+    chipTipEl?.classList.remove('visible');
+  }
+
+  const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+  $$('.chip').forEach((chip) => {
+    const label = chip.textContent.replace(/\s+/g, ' ').trim();
+    const tip = CHIP_TIPS[label] || chip.dataset.tip;
+    if (!tip) return;
+    chip.dataset.tip = tip;
+    if (canHover) {
+      chip.setAttribute('aria-label', `${label}: ${tip}`);
+      chip.addEventListener('mouseenter', () => showChipTip(chip, tip));
+      chip.addEventListener('mouseleave', hideChipTip);
+    }
   });
 
   /* ─── Skill meters ─── */
@@ -390,7 +468,7 @@
         meter.classList.add('active');
       });
       meter.addEventListener('mouseleave', () => {
-        if (skillTip) skillTip.textContent = 'Hover a skill to see context';
+        if (skillTip) skillTip.textContent = 'Tap a skill bar for details';
         meter.classList.remove('active');
       });
       meter.addEventListener('click', () => {
@@ -401,12 +479,210 @@
     });
   }
 
-  /* ─── Kbd hint fade ─── */
-  const kbdHint = $('#kbdHint');
-  if (kbdHint) {
-    setTimeout(() => kbdHint.classList.add('fade-out'), 8000);
-    setTimeout(() => kbdHint.remove(), 9500);
+  /* ─── Project modal & case studies ─── */
+  const projectModal = $('#projectModal');
+  const projectModalBackdrop = $('#projectModalBackdrop');
+
+  const FALLBACK_CASE_STUDIES = {
+    vizieye: {
+      problem: 'Smart India Hackathon teams needed to explore datasets, build charts, and present insights under tight deadlines — without wrestling with fragmented tools or slow iteration cycles.',
+      solution: 'Led development of Vizieye, a Python data visualization platform focused on speed, clarity, and team collaboration. Built for SIH & H.T.M. 5.0 with a workflow tuned for rapid exploration and demo-ready outputs.',
+      stack: ['Python', 'Data Visualization', 'Collaborative UX', 'Hackathon tooling'],
+      impact: 'Team Lead on a hackathon-winning platform — pitched and demoed to national jury panels under competition pressure.',
+    },
+    lakehouse: {
+      problem: 'Enterprise analytics teams needed governed, scalable pipelines that bridge raw ingestion with trusted analytics — without siloed data or brittle ETL.',
+      solution: 'Design and build production lakehouse pipelines at R Systems using Databricks, Delta Live Tables, Unity Catalog, and Snowflake integration patterns for enterprise clients.',
+      stack: ['Databricks', 'Apache Spark', 'Delta Live Tables', 'Unity Catalog', 'Snowflake', 'ETL'],
+      impact: 'Delivering production-grade lakehouse architecture with governance-first data modeling — current role focus since Oct 2025.',
+    },
+  };
+
+  let caseStudiesCache = null;
+
+  async function loadCaseStudies() {
+    if (caseStudiesCache) return caseStudiesCache;
+    try {
+      const res = await fetch('config/projects.json', { cache: 'no-cache' });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      caseStudiesCache = { ...FALLBACK_CASE_STUDIES, ...(data.caseStudies || {}) };
+    } catch {
+      caseStudiesCache = FALLBACK_CASE_STUDIES;
+    }
+    return caseStudiesCache;
   }
+
+  function renderCaseStudyHtml(study) {
+    if (!study) return '';
+    const stack = (study.stack || [])
+      .map((t) => `<span>${t}</span>`)
+      .join('');
+    return `
+      <div class="case-study-grid">
+        <div class="case-study-block">
+          <span class="case-study-label">Problem</span>
+          <p>${study.problem}</p>
+        </div>
+        <div class="case-study-block">
+          <span class="case-study-label">Solution</span>
+          <p>${study.solution}</p>
+        </div>
+        <div class="case-study-block">
+          <span class="case-study-label">Tech stack</span>
+          <div class="case-study-stack">${stack}</div>
+        </div>
+        <div class="case-study-block case-study-impact">
+          <span class="case-study-label">Impact</span>
+          <p>${study.impact}</p>
+        </div>
+      </div>`;
+  }
+
+  function openProjectModal(card) {
+    if (!projectModal || card.dataset.noModal !== undefined) return;
+    const idEl = $('#projectModalId');
+    const titleEl = $('#projectModalTitle');
+    const descEl = $('#projectModalDesc');
+    const chipsEl = $('#projectModalChips');
+    const ghLink = $('#projectModalGithub');
+    const caseEl = $('#projectModalCase');
+
+    if (idEl) idEl.textContent = $('.project-id', card)?.textContent?.trim() || '';
+    if (titleEl) titleEl.textContent = $('h3', card)?.textContent?.trim() || '';
+    if (descEl) descEl.textContent = $('p', card)?.textContent?.trim() || '';
+    if (chipsEl) {
+      chipsEl.innerHTML = $$('.project-chips span', card)
+        .map((s) => `<span>${s.textContent.trim()}</span>`)
+        .join('');
+    }
+    if (ghLink) {
+      const url = card.dataset.github;
+      if (url) {
+        ghLink.href = url;
+        ghLink.hidden = false;
+      } else {
+        ghLink.hidden = true;
+      }
+    }
+
+    const caseKey = card.dataset.caseStudy;
+    if (caseEl) {
+      if (caseKey) {
+        loadCaseStudies().then((studies) => {
+          const study = studies[caseKey];
+          if (study) {
+            caseEl.innerHTML = renderCaseStudyHtml(study);
+            caseEl.hidden = false;
+            projectModal?.classList.add('has-case-study');
+          } else {
+            caseEl.innerHTML = '';
+            caseEl.hidden = true;
+            projectModal?.classList.remove('has-case-study');
+          }
+        });
+      } else {
+        caseEl.innerHTML = '';
+        caseEl.hidden = true;
+        projectModal?.classList.remove('has-case-study');
+      }
+    }
+
+    projectModal.removeAttribute('hidden');
+    projectModal.classList.add('open');
+    document.body.classList.add('modal-open');
+  }
+
+  function closeProjectModal() {
+    projectModal?.classList.remove('open', 'has-case-study');
+    projectModal?.setAttribute('hidden', '');
+    document.body.classList.remove('modal-open');
+  }
+
+  $$('#projectsGrid .project-card').forEach((card) => {
+    if (card.dataset.noModal !== undefined) return;
+    const top = $('.project-top', card);
+    if (top && !$('.project-expand-hint', top)) {
+      const hint = document.createElement('span');
+      hint.className = 'project-expand-hint';
+      hint.textContent = 'Click for details';
+      const link = $('.project-link', top);
+      if (link) top.insertBefore(hint, link);
+      else top.appendChild(hint);
+    }
+    card.setAttribute('role', 'button');
+    card.setAttribute('tabindex', '0');
+    card.addEventListener('click', (e) => {
+      if (e.target.closest('a')) return;
+      openProjectModal(card);
+    });
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openProjectModal(card);
+      }
+    });
+  });
+
+  $('#projectModalClose')?.addEventListener('click', closeProjectModal);
+  $('#projectModalDismiss')?.addEventListener('click', closeProjectModal);
+  projectModalBackdrop?.addEventListener('click', closeProjectModal);
+
+  /* ─── Global keyboard shortcuts ─── */
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+      e.preventDefault();
+      cmdPalette?.classList.contains('open') ? closeCmd() : openCmd();
+      return;
+    }
+    if (e.key === '?' && !e.target.matches('input, textarea')) {
+      e.preventDefault();
+      shortcutsPanel?.classList.contains('open') ? closeShortcuts() : openShortcuts();
+      return;
+    }
+    if (e.key === 'Escape') {
+      if (document.getElementById('nav')?.classList.contains('open')) return;
+      closeCmd();
+      closeShortcuts();
+      if (projectModal?.classList.contains('open')) closeProjectModal();
+      return;
+    }
+    if (e.target.matches('input, textarea') || cmdPalette?.classList.contains('open')) return;
+
+    if (e.key === 't' || e.key === 'T') {
+      $('#themeFab')?.click();
+    }
+    if (e.key === 'r' || e.key === 'R') {
+      $('#refreshLiveBtn')?.click();
+      toast('Refreshing live data…', 'default');
+    }
+
+    if (e.key === 'g' || e.key === 'G') {
+      gKeyPending = true;
+      clearTimeout(gKeyTimer);
+      gKeyTimer = setTimeout(() => {
+        gKeyPending = false;
+      }, 1200);
+      return;
+    }
+    if (gKeyPending) {
+      gKeyPending = false;
+      const map = {
+        h: 'home',
+        a: 'about',
+        e: 'experience',
+        p: 'projects',
+        l: 'activity',
+        c: 'contact',
+      };
+      const id = map[e.key.toLowerCase()];
+      if (id) {
+        const el = document.getElementById(id);
+        smoothScrollTo(el);
+        history.replaceState(null, '', `#${id}`);
+      }
+    }
+  });
 
   /* ─── Expose refresh for live.js ─── */
   window.portfolioToast = toast;
