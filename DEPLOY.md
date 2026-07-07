@@ -21,14 +21,16 @@ git push -u origin main
 1. Go to [vercel.com](https://vercel.com) → **Sign up with GitHub**
 2. **Add New…** → **Project**
 3. Import `Shailsharma2604/portfolio`
-4. Settings (auto-detected):
+4. Settings — `vercel.json` in the repo sets these; confirm in the import UI if needed:
 
 | Setting | Value |
 |---------|--------|
-| Framework Preset | **Other** |
-| Build Command | *(leave empty)* |
-| Output Directory | *(leave empty)* |
+| Framework Preset | **Other** (`framework: null` in `vercel.json`) |
+| Build Command | `npm run build` *(JS syntax check only)* |
+| Output Directory | `.` *(repo root — `index.html`, `css/`, `js/`, `assets/`)* |
 | Install Command | `npm install` *(optional)* |
+
+> **If deploy fails with “No Output Directory named public”:** the dashboard may still say `public`. `vercel.json` overrides that with `"outputDirectory": "."`. Push the latest `vercel.json` and redeploy.
 
 5. **Environment variables** (Project → Settings → Environment Variables):
 
@@ -94,12 +96,29 @@ npm run vercel:dev
 porfolio/
 ├── api/
 │   ├── github.js      → /api/github
-│   └── config.js      → /api/config
-├── vercel.json
-├── index.html         → served as homepage
+│   ├── config.js      → /api/config
+│   ├── contact.js     → /api/contact
+│   └── ...
+├── vercel.json        → framework: null, outputDirectory: "."
+├── .vercelignore      → excludes node_modules, server.js, etc.
+├── index.html         → served as homepage (repo root = static output)
 ├── css/  js/  assets/
-└── server.js          → local dev only (npm start)
+└── server.js          → local dev only (npm start); not deployed
 ```
+
+### `vercel.json` essentials
+
+Static files live at the repo root (no `public/` or `dist/`). Vercel’s “Other” preset defaults to a `public` output folder when a build runs; this project overrides that:
+
+```json
+{
+  "framework": null,
+  "buildCommand": "npm run build",
+  "outputDirectory": "."
+}
+```
+
+The `api/` folder is auto-detected for serverless functions regardless of `outputDirectory`.
 
 ---
 

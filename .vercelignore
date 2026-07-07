@@ -1,0 +1,9 @@
+node_modules/
+.git/
+.env
+.env.*
+*.log
+server.js
+render.yaml
+_*.png
+_audit*.js
